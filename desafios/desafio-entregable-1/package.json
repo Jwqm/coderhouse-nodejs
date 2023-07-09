@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  },
+  "name": "coderhouse-desafio-entregable",
+  "version": "1.0.0",
+  "description": "Coder House - Desafio Entregable - 1",
+  "main": "ProductMain.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jwquezada",
+  "license": "ISC"
+}
