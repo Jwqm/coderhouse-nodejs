@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "fs-extra": "^11.1.1",
+    "prompt-sync": "^4.2.0"
+  },
+  "name": "coderhouse-desafio-entregable",
+  "version": "1.0.0",
+  "description": "Coder House - Desafio Entregable - 2",
+  "main": "ProductMain.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jwquezada",
+  "license": "ISC"
+}
