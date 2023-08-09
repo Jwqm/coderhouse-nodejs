@@ -16,5 +16,3 @@ const funcionAsincrona = async () => {
         console.log(error)
     }
 }
-
-funcionAsincrona();
