@@ -1,0 +1,21 @@
+<h1 class="title">Carrito de Compras</h1>
+<div class="container">
+    {{#each products}}
+    <div class="card" id={{this.id}}>
+        <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <p class="card-text">Precio: ${{this.price}}</p>
+            <a href="products/detail/{{this._id}}">Ver detalles</a>
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+<div class="container">
+    <p class="card-text">Precio Total: ${{this.totalPrice}}</p>
+</div>
+<div class="button-container">
+    <a href="/products">
+        <button>Volver</button>
+    </a>
+</div>
