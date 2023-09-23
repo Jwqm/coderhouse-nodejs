@@ -9,7 +9,7 @@ export default class UserManager {
         return userModel.findOne(params).lean();
     }
 
-    create = (body) => {
-        return userModel.create(body);
+    create = (user) => {
+        return userModel.create(user);
     }
 }
