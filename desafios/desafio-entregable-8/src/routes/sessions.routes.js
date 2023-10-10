@@ -10,12 +10,12 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.post('/register', executePolicies(["NO_AUTH"]), passportCall("register", { strategyType: "LOCALS" }), SessionsValidators.registerBody, ValidationErrorHandler, passport.authenticate('register', { failureRedirect: '/api/sessions/authFail', failureMessage: true }), async (req, res, next) => {
+router.post('/register', executePolicies(["NO_AUTH"]), SessionsValidators.registerBody, ValidationErrorHandler, passportCall("register", { strategyType: "LOCALS" }), async (req, res, next) => {
     return sendResponse(201, { message: 'Usuario registrado correctamente' })(req, res);
 })
 
-router.post('/login', executePolicies(["NO_AUTH"]), passportCall("login", { strategyType: "LOCALS" }), SessionsValidators.loginBody, ValidationErrorHandler, passport.authenticate('login', { failureRedirect: '/api/sessions/authFail', failureMessage: true }), async (req, res, next) => {
-    //req.session.user = req.user;
+router.post('/login', executePolicies(["NO_AUTH"]), SessionsValidators.loginBody, ValidationErrorHandler, passportCall("login", { strategyType: "LOCALS" }), async (req, res, next) => {
+    req.session.user = req.user;
     const tokenizedUser = {
         name: `${req.user.firstName} ${req.user.lastName}`,
         id: req.user._id,
