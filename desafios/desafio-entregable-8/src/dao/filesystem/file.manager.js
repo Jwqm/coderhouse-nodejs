@@ -24,7 +24,6 @@ class FileManager {
             allData.push(data);
             return this.saveAllDataToFile(allData);
         } catch (error) {
-            console.log("00011 -> ", error);
             throw new CustomError(11, 'Error al guardar datos en el archivo');
         }
     }

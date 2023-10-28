@@ -1,8 +1,6 @@
-import { sendResponse } from '../middlewares/response.handler.js';
-
 const executePolicies = (policies) => {
     return (req, res, next) => {
-        console.log(req.user);
+        if (!req.user && req.session.user) req.user = req.session.user;
         if (policies[0] === "PUBLIC") return next();
         if (policies[0] === "NO_AUTH" && !req.user) return next();
         if (policies[0] === "NO_AUTH" && req.user)

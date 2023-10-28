@@ -96,7 +96,6 @@ class ProductsManager {
 
       return this.fileManager.saveAllDataToFile(products);
     } catch (error) {
-      console.log(error);
       if (error instanceof CustomError) throw error;
       throw new CustomError(20030, 'Error al actualizar el producto');
     }

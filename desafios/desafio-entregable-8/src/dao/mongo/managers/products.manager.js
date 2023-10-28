@@ -102,7 +102,6 @@ export default class ProductsManager {
                 nextLink,
             }
         } catch (error) {
-            console.log(error);
             if (error instanceof CustomError) throw error;
             throw new CustomError(20010, 'Error al obtener los productos');
         }
@@ -115,7 +114,6 @@ export default class ProductsManager {
 
             return product;
         } catch (error) {
-            console.log(error);
             if (error instanceof CustomError) throw error;
             throw new CustomError(20030, 'Error al actualizar el producto');
         }

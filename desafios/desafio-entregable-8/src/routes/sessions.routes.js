@@ -27,7 +27,6 @@ router.post('/login', executePolicies(["NO_AUTH"]), SessionsValidators.loginBody
 })
 
 router.get('/authFail', ValidationErrorHandler, (req, res, next) => {
-    console.log(req.session.messages);
     if (req.session.messages) {
         throw new UnauthorizedError(40000, req.session.messages[0]);
     } else {
@@ -42,7 +41,6 @@ router.get('/githubcallback', passport.authenticate('github'), (req, res, next) 
 })
 
 router.get('/current', executePolicies(["AUTH"]), (req, res, next) => {
-    console.log(req.user);
     return sendResponse(200, { message: 'Usuario logueado correctamente' })(req, res);
 })
 
