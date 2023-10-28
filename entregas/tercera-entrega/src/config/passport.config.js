@@ -3,10 +3,8 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import GithubStrategy from 'passport-github2';
 
-import UserManager from "../dao/mongo/managers/user.manager.js";
+import { usersService } from "../services/index.js";
 import auth from "../services/auth.js";
-
-const usersService = new UserManager();
 
 const initializeStrategies = () => {
     passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' }, async (req, email, password, done) => {
@@ -32,12 +30,7 @@ const initializeStrategies = () => {
         const { email, name } = profile._json;
         const user = await usersService.getBy({ email });
         if (!user) {
-            const newUser = {
-                firstName: name,
-                email,
-                password: ''
-            }
-            const result = await usersService.create(newUser);
+            const result = await usersService.create({ firstName: name, email, password: '' });
             done(null, result);
         } else {
             done(null, user);
@@ -53,7 +46,7 @@ const initializeStrategies = () => {
         return done(null, payload);
     }))
 
-    passport.serializeUser((user, done) => {
+    passport.serializeUser((user, done) => {//TODO 01 - Recordar para que usaba
         return done(null, user._id);
     });
 

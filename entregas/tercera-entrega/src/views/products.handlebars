@@ -15,6 +15,7 @@
             <img class="card-img" src={{this.thumbnail}} alt={{this.title}} />
             <h5 class="card-title">{{this.title}}</h5>
             <p class="card-text">Precio: ${{this.price}}</p>
+            <p class="card-text">Stock: {{this.stock}}</p>
             <form action="/products/detail/{{this._id}}" method="GET">
                 <button id="detail" type="submit">Ver detalles</button>
             </form>

@@ -15,6 +15,7 @@ dotenv.config({
 export default {
   app: {
     PORT: process.env.PORT || 8080,
+    PERSISTENCE: process.env.PERSISTENCE || 'MONGO',
     ADMIN_EMAIL: process.env.ADMIN_EMAIL,
     ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
   },

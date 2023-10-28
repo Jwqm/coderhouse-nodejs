@@ -6,7 +6,7 @@ class ProductsManager {
   fileManager;
 
   constructor() {
-    this.fileManager = new FileManager('\\data\\products.json');
+    this.fileManager = new FileManager('\\dao\\filesystem\\files\\products.json');
     this.getLatestIdProduct();
   }
 
