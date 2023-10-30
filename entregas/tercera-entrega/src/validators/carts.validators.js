@@ -36,9 +36,13 @@ export const productsBody = [
     body('products')
         .isArray()
         .withMessage('La propiedad products debe ser un arreglo'),
-    body('products.*.idProduct')
+    /*    body('products.*.idProduct')
+            .isMongoId()
+            .withMessage('El campo idProduct debe ser un ID de MongoDB válido'),
+    */
+    body('products.*.id')
         .isMongoId()
-        .withMessage('El campo idProduct debe ser un ID de MongoDB válido'),
+        .withMessage('El campo id debe ser un ID de MongoDB válido'),
     body('products.*.quantity')
         .isInt({ min: 1 })
         .withMessage('El campo quantity debe ser un número entero mayor o igual a 1'),

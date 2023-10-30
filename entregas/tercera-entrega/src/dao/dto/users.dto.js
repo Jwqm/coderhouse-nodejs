@@ -1,4 +1,4 @@
-export default class UserDTO {//TODO 02 - VER SI CONVIENE DEVOLVER TODO
+export default class UserDTO {
     constructor({ name, firstName, lastName, email, age, password, role, cart }) {
         if (name) this.name = name;
         if (firstName) this.firstName = firstName;

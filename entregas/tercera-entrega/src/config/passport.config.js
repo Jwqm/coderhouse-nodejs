@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import GithubStrategy from 'passport-github2';
 
-import { usersService } from "../services/index.js";
+import { usersService } from "../services/repositories.service.js";
 import auth from "../services/auth.js";
 
 const initializeStrategies = () => {

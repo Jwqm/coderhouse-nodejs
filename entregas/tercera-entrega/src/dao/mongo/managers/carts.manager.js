@@ -10,7 +10,7 @@ export default class CartsManager {
         this.productsManager = new ProductsManager();
     }
 
-    addCart = async () => {
+    /*addCart = async () => {
         try {
             return await cartModel.create({});
         } catch (error) {
@@ -38,7 +38,7 @@ export default class CartsManager {
             if (error instanceof CustomError) throw error;
             throw new CustomError(20110, 'Error al obtener el carrito de compra');
         }
-    }
+    }*/
 
     updateCartAndProduct = async (idCard, productsUpdate, add) => {
         try {
@@ -108,7 +108,7 @@ export default class CartsManager {
         }
     }
 
-    deleteCart = async (id) => {
+    /*deleteCart = async (id) => {
         try {
             const cart = await cartModel.findByIdAndDelete({ _id: id }).lean();
             if (!cart) throw new NotFoundError(20111, 'Carrito de compra no encontrado');
@@ -118,6 +118,6 @@ export default class CartsManager {
             if (error instanceof CustomError) throw error;
             throw new CustomError(20140, 'Error al eliminar el carrito de compra');
         }
-    }
+    }*/
 
 }

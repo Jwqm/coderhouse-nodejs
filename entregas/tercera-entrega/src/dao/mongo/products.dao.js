@@ -3,6 +3,10 @@ import { NotFoundError, CustomError } from '../../errors/custom.error.js';
 
 export default class ProductsDAO {
 
+    getBy = async (productDTO) => {
+        return productModel.findById(productDTO).lean();
+    }
+
     addProduct = async (body) => {
         try {
             const existProduct = await this.getProductByCode(body.code);
@@ -107,16 +111,8 @@ export default class ProductsDAO {
         }
     }
 
-    updateProduct = async (updateProduct) => {
-        try {
-            const product = await productModel.findByIdAndUpdate({ _id: updateProduct.id }, { $set: updateProduct }).lean();
-            if (!product) throw new NotFoundError(20011, 'Producto no encontrado');
-
-            return product;
-        } catch (error) {
-            if (error instanceof CustomError) throw error;
-            throw new CustomError(20030, 'Error al actualizar el producto');
-        }
+    update = async (productDTO) => {
+        return productModel.findByIdAndUpdate({ _id: productDTO._id }, { $set: productDTO }).lean();
     }
 
     deleteProduct = async (id) => {
