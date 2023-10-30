@@ -76,10 +76,10 @@ export default class SessionOperation {
 
     addProductToCart(product) {
         const existingProduct = this.session.temporaryCarts.products.find(item => item.id === product.id);
-        if (existingProduct && existingProduct.stock > 1) {
+        if (existingProduct && existingProduct.stock >= 1) {
             existingProduct.quantity += 1;
             existingProduct.stock -= 1;
-        } else if (product.stock > 1) {
+        } else if (product.stock >= 1) {
             product.stock -= 1;
             product.quantity = 1;
             this.session.temporaryCarts.products.push(product);

@@ -67,9 +67,9 @@ export default class CartsRepository {
         }
     }
 
-    update = async (cartDTO, productDTO) => {
+    update = async (cartDTO) => {
         try {
-            return CartsDTO.fromDatabaseData(await this.dao.update(cartDTO.toDatabaseData(), productDTO.toDatabaseData()));
+            return CartsDTO.fromDatabaseData(await this.dao.update(cartDTO.toDatabaseData()));
         } catch (error) {
             if (error instanceof CustomError) throw error;
             throw new CustomError(20120, 'Error al actualizar el carrito de compra');

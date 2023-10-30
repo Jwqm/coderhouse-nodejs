@@ -1,8 +1,8 @@
 
 import ProductsDTO from "../dao/dto/products.dto.js";
 import CartsDTO from "../dao/dto/carts.dto.js";
-import { cartsService, productsService } from "../services/repositories.service.js";
-import { CustomError } from "../errors/custom.error.js";
+import TicketsDTO from "../dao/dto/tickets.dto.js";
+import { cartsService, productsService, ticketsService } from "../services/repositories.service.js";
 
 export default class PurchaseService {
 
@@ -11,48 +11,53 @@ export default class PurchaseService {
         const failedProducts = [];
         for (const productUpdateDTO of productsDTO) {
             try {
-                const productDTO = await productsService.getBy(ProductsDTO.build({ id: productUpdateDTO.id }));
-                const cart = await cartsService.getBy(cartDTO);
-
+                const productDTOSearch = await productsService.getBy(ProductsDTO.build({ id: productUpdateDTO.id }));
+                if (!productDTOSearch) continue;
+                const cartDTOSearch = await cartsService.getBy(cartDTO);
+                const quantity = parseInt(productUpdateDTO.quantity);
                 if (add) {
-                    if (productDTO.stock < productUpdateDTO.quantity) {
+                    if (productDTOSearch.stock < quantity) {
                         failedProducts.push(productUpdateDTO);
-                        //throw new CustomError(10015, `Error solo quedan en stock ${product.stock} productos`);
+                        continue;
                     }
-                    productDTO.stock -= productUpdateDTO.quantity;
+                    productDTOSearch.stock -= quantity;
                 } else {
-                    productDTO.stock += productUpdateDTO.quantity;
+                    productDTOSearch.stock += quantity;
                 }
-                productDTO.quantity = productUpdateDTO.quantity;
+                productDTOSearch.quantity = quantity;
 
-                const productCartDTO = cart.products.find((x) => x.idProduct._id.toString() == productDTO.id.toString());
+                let productCartDTO = cartDTOSearch.products.find((item) => item.product._id.toString() == productDTOSearch.id.toString());
                 if (!productCartDTO) {
-                    cartsService.createBy(CartsDTO.build({ id: cart.id }), ProductsDTO.build({ id: productDTO.id, quantity: productDTO.quantity }));
+                    productCartDTO = { id: productDTOSearch.id.toString(), quantity: 0 };
+                    cartDTOSearch.products.push(productCartDTO);
+                }
+                if (add) {
+                    productCartDTO.quantity += quantity;
                 } else {
-                    if (add) {
-                        productCartDTO.quantity += productUpdateDTO.quantity;
-                    } else {
-                        if (productCartDTO.quantity < productUpdateDTO.quantity) {
-                            failedProducts.push(productUpdateDTO);
-                            //throw a CustomError(10016, `Error solo puede quitar ${productCart.quantity} productos del carrito de compras`);
-                        }
-                        productCartDTO.quantity -= productUpdateDTO.quantity;
+                    if (productCartDTO.quantity < quantity) {
+                        failedProducts.push(productUpdateDTO);
+                        continue;
                     }
-                    if (productCartDTO.quantity === 0) {
-                        cartsService.update(CartsDTO.build({ id: cart.id }), ProductsDTO.build({ id: productDTO.id }));
-                    } else {
-                        cartsService.updateBy(CartsDTO.build({ id: cart.id }), ProductsDTO.build({ id: productDTO.id, quantity: productDTO.quantity }));
-                    }
+                    productCartDTO.quantity -= productUpdateDTO.quantity;
                 }
 
-                await productsService.update(ProductsDTO.build({ id: productDTO.id, stock: productDTO.stock }));
+                await cartsService.update(cartDTOSearch);
+
+                await productsService.update(ProductsDTO.build({ id: productDTOSearch.id, stock: productDTOSearch.stock }));
+
                 suscessProducts.push(productUpdateDTO);
             } catch (error) {
                 failedProducts.push(productUpdateDTO);
-                // throw new CustomError(20130, 'Error al actualizar el carrito de compra');
             }
-            return { suscessProducts, failedProducts };
         }
+        return { suscessProducts, failedProducts };
+
+    }
+
+    register = async (user, products) => {
+        const amount = products.reduce((total, product) => total + product.price, 0);
+        const ticket = await ticketsService.create(TicketsDTO.build({ amount: amount, mail: user.email }));
+        return { ticket };
     }
 
 }

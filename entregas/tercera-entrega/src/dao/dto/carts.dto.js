@@ -23,7 +23,10 @@ export default class CartsDTO {
     toDatabaseData() {
         const databaseData = {
             _id: this.id,
-            products: this.products,
+            products: (this.products) ? this.products.map(item => ({
+                product: (item.id) ? item.id : item.product._id.toString(),
+                quantity: item.quantity
+            })) : undefined,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
         };

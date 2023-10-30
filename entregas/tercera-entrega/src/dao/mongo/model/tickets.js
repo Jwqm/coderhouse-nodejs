@@ -5,13 +5,13 @@ const schema = new mongoose.Schema(
     {
         code: {
             type: String,
-            required: true,
             unique: true,
-            codeTicket,
+            default: function () {
+                return Math.random().toString(36).substring(7);
+            },
         },
         purchase_datetime: {
             type: Date,
-            required: true,
             default: Date.now,
         },
         amount: Number,

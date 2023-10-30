@@ -6,7 +6,7 @@ export default class CartsDAO {
     }
 
     getBy = (cartDTO) => {
-        return cartModel.findById(cartDTO).populate('products.idProduct').lean();
+        return cartModel.findById(cartDTO).populate('products.product').lean();
     }
 
     create = (cartDTO) => {
@@ -17,15 +17,21 @@ export default class CartsDAO {
         return cartModel.findByIdAndDelete(cartDTO).lean();
     }
 
-    update = (cartDTO, productDTO) => {
-        return cartModel.updateOne(
-            { _id: cartDTO.id },
+    update = (cartDTO) => {
+        /*const productDTO = cartDTO.products[0];
+        return cartModel.findOneAndUpdate(
+            { _id: cartDTO._id },
             {
-                $pull: {
-                    products: { idProduct: productDTO._id },
+                $addToSet: {
+                    products: {
+                        product: productDTO.product,
+                        quantity: productDTO.quantity,
+                    },
                 },
-            }
-        );
+            },
+            { new: true },
+        );*/
+        return cartModel.updateOne({ _id: cartDTO._id }, { $set: { products: cartDTO.products } });
     }
 
     updateBy = (cartDTO, productDTO) => {
@@ -44,7 +50,7 @@ export default class CartsDAO {
             {
                 $addToSet: {
                     products: {
-                        idProduct: productDTO._id,
+                        product: productDTO._id,
                         quantity: productDTO.quantity,
                     },
                 },

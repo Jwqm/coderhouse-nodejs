@@ -16,11 +16,12 @@ router.get("/products", auth, async (req, res, next) => {
     const { hasPrevPage, hasNextPage, prevPage, nextPage } = result;
     const sessionOperation = SessionOperation.build(req.session);
     sessionOperation.updateStockProducts(products);
+    const temporaryCarts = sessionOperation.getTemporaryCarts();
 
     res.render("products", {
         user: req.session.user,
         products,
-        idCart: sessionOperation.getTemporaryCarts().idCart,
+        idCart: temporaryCarts.products.length > 0 ? temporaryCarts.idCart : undefined,
         page: currentPage,
         hasPrevPage,
         hasNextPage,
@@ -63,16 +64,23 @@ router.post('/products/addToCart/:pid', auth, async (req, res, next) => {
 router.post('/purchase', auth, async (req, res, next) => {
     const sessionOperation = SessionOperation.build(req.session);
     const temporaryCarts = sessionOperation.getTemporaryCarts();
+    let cartDTO;
     if (temporaryCarts) {
-        const cartDTO = await cartsService.create();
+        cartDTO = await cartsService.create();
         if (!cartDTO) res.render("errors", { errorMessage: 'No se pudo crear el carrito.' });
         const productsDTO = temporaryCarts.products;
         const result = await purchaseService.purchase(cartDTO, productsDTO, true);
         if (result) {
             sessionOperation.getTemporaryCarts().products = result.failedProducts;
+            if (result.suscessProducts) {
+                const ticket = await purchaseService.register(req.session.user, result.suscessProducts);
+                const { code, mail, amount, date } = ticket;
+                return res.render("ticket", { code, amount, mail, date });
+            }
         }
-        return res.redirect('/products');
+        return res.redirect(`/products`);
     } else {
+        await cartsService.delete(cartDTO);
         res.render("errors", { errorMessage: 'No se pudo procesar la compra.' });
     }
 });
