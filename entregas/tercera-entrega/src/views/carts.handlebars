@@ -6,7 +6,7 @@
             <h5 class="card-title">{{this.title}}</h5>
             <p class="card-text">Cantidad: {{this.quantity}}</p>
             <p class="card-text">Precio: ${{this.price}}</p>
-            <form action="/products/detail/{{this._id}}" method="GET">
+            <form action="/products/detail/{{this.id}}" method="GET">
                 <button type="submit">Ver detalles</button>
             </form>
         </div>
@@ -18,7 +18,7 @@
     <span>Precio Total: ${{this.totalPrice}}</span>
 </div>
 <div class="container">
-    <form action="/products" method="GET">
+    <form action="/purchase" method="POST">
         <button type="submit">Comprar</button>
     </form>
 </div>

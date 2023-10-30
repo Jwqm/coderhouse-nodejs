@@ -68,8 +68,7 @@ router.post('/:cid/products/:pid/:units', CartsValidators.idAndIdProductOrUnitsP
 
 router.post('/:cid/purchase', CartsValidators.idParam, CartsValidators.productsBody, ValidationErrorHandler, async (req, res, next) => {
     try {
-        const add = true;
-        const test = await purchaseService.purchase(CartsDTO.build({ id: req.params.cid }), req.body.products, add);
+        await purchaseService.purchase(CartsDTO.build({ id: req.params.cid }), req.body.products, add);
 
         return sendResponse(200, { message: 'Producto actualizado exitosamente al carrito de compras' })(req, res);
     } catch (err) {

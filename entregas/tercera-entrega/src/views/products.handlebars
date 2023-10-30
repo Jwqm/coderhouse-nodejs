@@ -16,10 +16,10 @@
             <h5 class="card-title">{{this.title}}</h5>
             <p class="card-text">Precio: ${{this.price}}</p>
             <p class="card-text">Stock: {{this.stock}}</p>
-            <form action="/products/detail/{{this._id}}" method="GET">
+            <form action="/products/detail/{{this.id}}" method="GET">
                 <button id="detail" type="submit">Ver detalles</button>
             </form>
-            <form action="/products/addToCart/{{this._id}}" method="POST">
+            <form action="/products/addToCart/{{this.id}}" method="POST">
                 <button id="add" type="submit">Agregar al carrito</button>
             </form>
         </div>

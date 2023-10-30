@@ -3,10 +3,6 @@ import { NotFoundError, CustomError } from '../../errors/custom.error.js';
 
 export default class ProductsDAO {
 
-    getBy = async (productDTO) => {
-        return productModel.findById(productDTO).lean();
-    }
-
     addProduct = async (body) => {
         try {
             const existProduct = await this.getProductByCode(body.code);
@@ -111,10 +107,6 @@ export default class ProductsDAO {
         }
     }
 
-    update = async (productDTO) => {
-        return productModel.findByIdAndUpdate({ _id: productDTO._id }, { $set: productDTO }).lean();
-    }
-
     deleteProduct = async (id) => {
         try {
             const product = await productModel.findByIdAndDelete({ _id: id }).lean();
@@ -125,6 +117,22 @@ export default class ProductsDAO {
             if (error instanceof CustomError) throw error;
             throw new CustomError(20040, 'Error al eliminar el producto');
         }
+    }
+
+
+    paginate = (filters, options) => {
+        const result = productModel.paginate(filters, options);
+        if (result.totalDocs === 0)
+            throw new NotFoundError(20011, 'No se encontraron productos que coincidan con los criterios de búsqueda.');
+        return result;
+    }
+
+    getBy = (productDTO) => {
+        return productModel.findById(productDTO).lean();
+    }
+
+    update = (productDTO) => {
+        return productModel.findByIdAndUpdate({ _id: productDTO._id }, { $set: productDTO }).lean();
     }
 
 }
