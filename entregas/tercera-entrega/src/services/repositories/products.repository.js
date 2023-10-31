@@ -1,12 +1,17 @@
 import ProductsDTO from "../../dao/dto/products.dto.js";
-import { CustomError } from "../../errors/custom.error.js";
+import { CustomError, NotFoundError } from "../../errors/custom.error.js";
 export default class ProductsRepository {
     constructor(dao) {
         this.dao = dao;
     }
 
-    get = () => {
-        return this.dao.get();
+    get = async () => {
+        try {
+            return (await this.dao.get()).map(product => ProductsDTO.fromDatabaseData(product));
+        } catch (error) {
+            if (error instanceof CustomError) throw error;
+            throw new CustomError(20010, 'Error al obtener los productos');
+        }
     }
 
     getBy = async (productDTO) => {
@@ -80,8 +85,16 @@ export default class ProductsRepository {
         }
     }
 
-    create = (product) => {
-        return this.dao.create(product.toDatabaseData());
+    create = async (productDTO) => {
+        try {
+            const existProduct = await this.dao.getBy(ProductsDTO.build({ code: productDTO.code }));
+            if (existProduct) throw new CustomError(20021, `Error ya existe un producto con el codigo ${existProduct.code}`);
+
+            return ProductsDTO.fromDatabaseData(await this.dao.create(productDTO.toDatabaseData()));
+        } catch (error) {
+            if (error instanceof CustomError) throw error;
+            throw new CustomError(20020, 'Error al agregar el producto');
+        }
     }
 
     update = async (productDTO) => {
@@ -93,6 +106,18 @@ export default class ProductsRepository {
         } catch (error) {
             if (error instanceof CustomError) throw error;
             throw new CustomError(20030, 'Error al actualizar el producto');
+        }
+    }
+
+    delete = async (productDTO) => {
+        try {
+            const product = ProductsDTO.fromDatabaseData(await this.dao.delete(productDTO.toDatabaseData()));
+            if (!product) throw new NotFoundError(20011, 'Producto no encontrado');
+
+            return product;
+        } catch (error) {
+            if (error instanceof CustomError) throw error;
+            throw new CustomError(20040, 'Error al eliminar el producto');
         }
     }
 

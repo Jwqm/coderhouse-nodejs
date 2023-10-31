@@ -18,44 +18,7 @@ export default class CartsDAO {
     }
 
     update = (cartDTO) => {
-        /*const productDTO = cartDTO.products[0];
-        return cartModel.findOneAndUpdate(
-            { _id: cartDTO._id },
-            {
-                $addToSet: {
-                    products: {
-                        product: productDTO.product,
-                        quantity: productDTO.quantity,
-                    },
-                },
-            },
-            { new: true },
-        );*/
         return cartModel.updateOne({ _id: cartDTO._id }, { $set: { products: cartDTO.products } });
     }
 
-    updateBy = (cartDTO, productDTO) => {
-        return cartModel.updateOne(
-            { _id: cartDTO._id, 'products.idProduct': productDTO._id },
-            {
-                $set: {
-                    'products.$.quantity': productDTO.quantity,
-                }
-            });
-    }
-
-    createBy = (cartDTO, productDTO) => {
-        return cartModel.findOneAndUpdate(
-            { _id: cartDTO._id },
-            {
-                $addToSet: {
-                    products: {
-                        product: productDTO._id,
-                        quantity: productDTO.quantity,
-                    },
-                },
-            },
-            { new: true },
-        );
-    }
 }

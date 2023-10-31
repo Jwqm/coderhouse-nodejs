@@ -15,7 +15,7 @@ export default class ProductsManager {
         }
     }
 
-    getProductById = async (id) => {
+    /*getProductById = async (id) => {
         try {
             const product = await productModel.findById(id).lean();
             if (!product) throw new NotFoundError(20011, 'Producto no encontrado');
@@ -43,7 +43,7 @@ export default class ProductsManager {
             if (error instanceof CustomError) throw error;
             throw new CustomError(20010, 'Error al obtener los productos');
         }
-    }
+    }*/
 
     getProductsPaginate = async (query) => {
         try {

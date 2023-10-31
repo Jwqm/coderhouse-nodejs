@@ -10,36 +10,6 @@ export default class CartsManager {
         this.productsManager = new ProductsManager();
     }
 
-    /*addCart = async () => {
-        try {
-            return await cartModel.create({});
-        } catch (error) {
-            if (error instanceof CustomError) throw error;
-            throw new CustomError(20101, 'Error al crear el carrito de compra');
-        }
-    }
-
-    getCartById = async (id) => {
-        try {
-            const cart = await cartModel.findById({ _id: id }).populate('products.idProduct').lean();
-            if (!cart) throw new NotFoundError(20111, 'Carrito de compra no encontrado');
-
-            return cart;
-        } catch (error) {
-            if (error instanceof CustomError) throw error;
-            throw new CustomError(20112, 'Error al obtener el carrito de compra');
-        }
-    }
-
-    getCarts = async () => {
-        try {
-            return await cartModel.find().lean();
-        } catch (error) {
-            if (error instanceof CustomError) throw error;
-            throw new CustomError(20110, 'Error al obtener el carrito de compra');
-        }
-    }*/
-
     updateCartAndProduct = async (idCard, productsUpdate, add) => {
         try {
             await productsUpdate.forEach(async (productUpdate) => {
@@ -107,17 +77,5 @@ export default class CartsManager {
             throw new CustomError(20130, 'Error al actualizar el carrito de compra');
         }
     }
-
-    /*deleteCart = async (id) => {
-        try {
-            const cart = await cartModel.findByIdAndDelete({ _id: id }).lean();
-            if (!cart) throw new NotFoundError(20111, 'Carrito de compra no encontrado');
-
-            return cart;
-        } catch (error) {
-            if (error instanceof CustomError) throw error;
-            throw new CustomError(20140, 'Error al eliminar el carrito de compra');
-        }
-    }*/
 
 }

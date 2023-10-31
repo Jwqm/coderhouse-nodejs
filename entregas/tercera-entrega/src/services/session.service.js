@@ -1,14 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import ProductsDTO from '../dao/dto/products.dto.js';
 
-export default class SessionOperation {
+export default class SessionService {
     constructor(session) {
         this.session = session;
     }
 
     static build(session) {
         this.generateTemporaryCarts(session);
-        return new SessionOperation(session);
+        return new SessionService(session);
     }
 
     static generateTemporaryCarts(session) {
