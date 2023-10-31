@@ -8,7 +8,7 @@ import UserDTO from '../dao/dto/users.dto.js';
 
 const router = express.Router();
 
-router.get("/products", auth, async (req, res, next) => {
+router.get("/products", auth(["NO_AUTH"]), async (req, res, next) => {
     const result = await productsService.paginate(req.query);
     const products = result.payload;
     const currentPage = result.page;
@@ -29,7 +29,7 @@ router.get("/products", auth, async (req, res, next) => {
     });
 });
 
-router.get('/carts/:cid', auth, async (req, res, next) => {
+router.get('/carts/:cid', auth(["USER"]), async (req, res, next) => {
     const sessionService = SessionService.build(req.session);
     let products = [];
     if (req.session.temporaryCarts) {
@@ -47,12 +47,12 @@ router.get('/carts/:cid', auth, async (req, res, next) => {
     res.render("carts", { products, totalPrice });
 });
 
-router.get('/products/detail/:pid', auth, async (req, res, next) => {
+router.get('/products/detail/:pid', auth(["USER"]), async (req, res, next) => {
     const product = SessionService.build(req.session).getProductBy(req.params.pid) || await productsService.getBy(ProductsDTO.build({ id: req.params.pid }));
     res.render("product", product);
 });
 
-router.post('/products/addToCart/:pid', auth, async (req, res, next) => {
+router.post('/products/addToCart/:pid', auth(["USER"]), async (req, res, next) => {
     const sessionService = SessionService.build(req.session);
     const productDTOSearch = sessionService.getProductBy(req.params.pid) || await productsService.getBy(ProductsDTO.build({ id: req.params.pid }));
     sessionService.addProductToCart(productDTOSearch);
@@ -60,7 +60,7 @@ router.post('/products/addToCart/:pid', auth, async (req, res, next) => {
     res.redirect(`/products`);
 });
 
-router.post('/purchase', auth, async (req, res, next) => {
+router.post('/purchase', auth(["USER"]), async (req, res, next) => {
     const sessionService = SessionService.build(req.session);
     const temporaryCarts = sessionService.getTemporaryCarts();
     let cartDTO;
@@ -84,7 +84,7 @@ router.post('/purchase', auth, async (req, res, next) => {
     }
 });
 
-router.get('/', auth, async (req, res, next) => {
+router.get('/', auth(["USER"]), async (req, res, next) => {
     const userSession = req.session.user;
     const userDTO = UserDTO.build({ name: userSession.firstName, lastname: userSession.lastName, age: userSession.age, email: userSession.email })
     res.render('profile', { user: userDTO });
@@ -104,11 +104,20 @@ router.get('/logout', async (req, res) => {
     });
 })
 
-function auth(req, res, next) {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-    return next();
+function auth(role) {
+    return (req, res, next) => {
+        // Aquí puedes usar el valor de `role` y realizar la lógica de autenticación según tus necesidades
+        // Por ejemplo, verificar si el usuario tiene el rol adecuado antes de permitir el acceso.
+
+        if (!req.session.user) {
+            return res.redirect('/login');
+        }
+        if (role[0] === "NO_AUTH") return next();
+        if (!role.includes(req.session.user.role.toUpperCase())) {
+            return res.redirect(`/products`);
+        }
+        return next();
+    };
 }
 
 export default router;
