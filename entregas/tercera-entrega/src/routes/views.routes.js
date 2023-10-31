@@ -84,7 +84,7 @@ router.post('/purchase', auth(["USER"]), async (req, res, next) => {
     }
 });
 
-router.get('/', auth(["USER"]), async (req, res, next) => {
+router.get('/', auth(["NO_AUTH"]), async (req, res, next) => {
     const userSession = req.session.user;
     const userDTO = UserDTO.build({ name: userSession.firstName, lastname: userSession.lastName, age: userSession.age, email: userSession.email })
     res.render('profile', { user: userDTO });

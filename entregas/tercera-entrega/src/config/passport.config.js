@@ -46,7 +46,7 @@ const initializeStrategies = () => {
         return done(null, payload);
     }))
 
-    passport.serializeUser((user, done) => {//TODO 01 - Recordar para que usaba
+    passport.serializeUser((user, done) => {
         return done(null, user._id);
     });
 

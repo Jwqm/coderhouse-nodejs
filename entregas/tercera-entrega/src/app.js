@@ -39,6 +39,7 @@ const connection = mongoose.connect(config.mongo.URL);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
+app.use(cookieParser());
 
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");

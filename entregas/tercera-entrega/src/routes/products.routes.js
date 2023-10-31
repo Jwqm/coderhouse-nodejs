@@ -3,6 +3,8 @@ import * as ProductsValidators from '../validators/products.validators.js';
 import ValidationErrorHandler from '../middlewares/validation.error.handler.js';
 import { sendResponse } from '../middlewares/response.handler.js';
 import { productsService } from "../services/repositories.service.js";
+import passportCall from "../middlewares/passport.call.js";
+import executePolicies from "../middlewares/execute.policies.js";
 import ProductsDTO from '../dao/dto/products.dto.js';
 
 const router = express.Router();
@@ -27,7 +29,7 @@ router.get('/:pid', ProductsValidators.idParam, ValidationErrorHandler, async (r
     }
 });
 
-router.post('/', ProductsValidators.productBody, ValidationErrorHandler, async (req, res, next) => {
+router.post('/', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.productBody, ValidationErrorHandler, async (req, res, next) => {
     try {
         await productsService.create(ProductsDTO.build(req.body));
 
@@ -37,7 +39,7 @@ router.post('/', ProductsValidators.productBody, ValidationErrorHandler, async (
     }
 });
 
-router.put('/:pid', ProductsValidators.idParamAndProductBody, ValidationErrorHandler, async (req, res, next) => {
+router.put('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.idParamAndProductBody, ValidationErrorHandler, async (req, res, next) => {
     try {
         await productsService.update(ProductsDTO.build({ id: req.params.pid, ...req.body }));
 
@@ -47,7 +49,7 @@ router.put('/:pid', ProductsValidators.idParamAndProductBody, ValidationErrorHan
     }
 });
 
-router.delete('/:pid', ProductsValidators.idParam, ValidationErrorHandler, async (req, res, next) => {
+router.delete('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.idParam, ValidationErrorHandler, async (req, res, next) => {
     try {
         await productsManager.deleteProduct(req.params.pid);
 
