@@ -1,5 +1,7 @@
 import ProductsDTO from "../../dao/dto/products.dto.js";
 import { CustomError, NotFoundError } from "../../errors/custom.error.js";
+import { errorCodes, errorMessages } from "../../dictionaries/errors.js"
+
 export default class ProductsRepository {
     constructor(dao) {
         this.dao = dao;
@@ -10,19 +12,19 @@ export default class ProductsRepository {
             return (await this.dao.get()).map(product => ProductsDTO.fromDatabaseData(product));
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20010, 'Error al obtener los productos');
+            throw new CustomError(errorCodes.ERROR_GET_PRODUCT, errorMessages[errorCodes.ERROR_GET_PRODUCT]);
         }
     }
 
     getBy = async (productDTO) => {
         try {
             const product = ProductsDTO.fromDatabaseData(await this.dao.getBy(productDTO.toDatabaseData()));
-            if (!product) throw new NotFoundError(20011, 'Producto no encontrado');
+            if (!product) throw new NotFoundError(errorCodes.ERROR_GET_PRODUCT_NOT_FOUND, errorMessages[errorCodes.ERROR_GET_PRODUCT_NOT_FOUND]);
 
             return product;
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20012, 'Error al obtener el producto');
+            throw new CustomError(errorCodes.ERROR_GET_PRODUCT_WITH, errorMessages[errorCodes.ERROR_GET_PRODUCT_WITH]);
         }
     }
 
@@ -81,43 +83,43 @@ export default class ProductsRepository {
             }
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20010, 'Error al obtener los productos');
+            throw new CustomError(errorCodes.ERROR_GET_PRODUCT, errorMessages[errorCodes.ERROR_GET_PRODUCT]);
         }
     }
 
     create = async (productDTO) => {
         try {
             const existProduct = await this.dao.getBy(ProductsDTO.build({ code: productDTO.code }));
-            if (existProduct) throw new CustomError(20021, `Error ya existe un producto con el codigo ${existProduct.code}`);
+            if (existProduct) throw new CustomError(errorCodes.ERROR_CREATE_PRODUCT_CODE_DUPLICATE, errorMessages[errorCodes.ERROR_CREATE_PRODUCT_CODE_DUPLICATE]);
 
             return ProductsDTO.fromDatabaseData(await this.dao.create(productDTO.toDatabaseData()));
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20020, 'Error al agregar el producto');
+            throw new CustomError(errorCodes.ERROR_CREATE_PRODUCT, errorMessages[errorCodes.ERROR_CREATE_PRODUCT]);
         }
     }
 
     update = async (productDTO) => {
         try {
             const product = ProductsDTO.fromDatabaseData(await this.dao.update(productDTO.toDatabaseData()));
-            if (!product) throw new NotFoundError(20011, 'Producto no encontrado');
+            if (!product) throw new NotFoundError(errorCodes.ERROR_GET_PRODUCT_NOT_FOUND, errorMessages[errorCodes.ERROR_GET_PRODUCT_NOT_FOUND]);
 
             return product;
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20030, 'Error al actualizar el producto');
+            throw new CustomError(errorCodes.ERROR_UPDATE_PRODUCT, errorMessages[errorCodes.ERROR_UPDATE_PRODUCT]);
         }
     }
 
     delete = async (productDTO) => {
         try {
             const product = ProductsDTO.fromDatabaseData(await this.dao.delete(productDTO.toDatabaseData()));
-            if (!product) throw new NotFoundError(20011, 'Producto no encontrado');
+            if (!product) throw new NotFoundError(errorCodes.ERROR_GET_PRODUCT_NOT_FOUND, errorMessages[errorCodes.ERROR_GET_PRODUCT_NOT_FOUND]);
 
             return product;
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20040, 'Error al eliminar el producto');
+            throw new CustomError(errorCodes.ERROR_DELETE_PRODUCT, errorMessages[errorCodes.ERROR_DELETE_PRODUCT]);
         }
     }
 

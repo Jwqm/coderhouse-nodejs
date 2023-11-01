@@ -2,7 +2,6 @@ import express from 'express';
 import * as CartsValidators from '../validators/carts.validators.js';
 import ValidationErrorHandler from '../middlewares/validation.error.handler.js';
 import CartsController from '../controllers/carts.controller.js';
-import cartsController from '../controllers/carts.controller.js';
 
 const router = express.Router();
 
@@ -16,11 +15,11 @@ router.post('/:cid/products/:pid', CartsValidators.idAndIdProductOrUnitsParam, V
 
 router.post('/:cid/products/:pid/:units', CartsValidators.idAndIdProductOrUnitsParam, ValidationErrorHandler, CartsController.updateBy);
 
-router.post('/:cid/purchase', CartsValidators.idParam, CartsValidators.productsBody, ValidationErrorHandler, cartsController.purchase);
+router.post('/:cid/purchase', CartsValidators.idParam, CartsValidators.productsBody, ValidationErrorHandler, CartsController.purchase);
 
-router.put('/:cid', CartsValidators.idParam, CartsValidators.productsBody, ValidationErrorHandler, cartsController.update);
+router.put('/:cid', CartsValidators.idParam, CartsValidators.productsBody, ValidationErrorHandler, CartsController.update);
 
-router.put('/:cid/products/:pid', CartsValidators.idAndUnitsParam, CartsValidators.quantityBody, ValidationErrorHandler, cartsController.update);
+router.put('/:cid/products/:pid', CartsValidators.idAndUnitsParam, CartsValidators.quantityBody, ValidationErrorHandler, CartsController.update);
 
 router.delete('/:cid', CartsValidators.idAndUnitsParam, ValidationErrorHandler, CartsController.remove);
 

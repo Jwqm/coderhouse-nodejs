@@ -2,6 +2,7 @@ import CartsDTO from "../../dao/dto/carts.dto.js";
 import ProductsDTO from "../../dao/dto/products.dto.js";
 import { CustomError, NotFoundError } from "../../errors/custom.error.js";
 import { productsService } from "../../services/repositories.service.js";
+import { errorCodes, errorMessages } from "../../dictionaries/errors.js"
 
 export default class CartsRepository {
     constructor(dao) {
@@ -13,19 +14,19 @@ export default class CartsRepository {
             return (await this.dao.get()).map(cart => CartsDTO.fromDatabaseData(cart));
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20110, 'Error al obtener el carrito de compra');
+            throw new CustomError(errorCodes.ERROR_GET_CART, errorMessages[errorCodes.ERROR_GET_CART]);
         }
     }
 
     getBy = async (cartDTO) => {
         try {
             const cart = CartsDTO.fromDatabaseData(await this.dao.getBy(cartDTO.toDatabaseData()));
-            if (!cart) throw new NotFoundError(20111, 'Carrito de compra no encontrado');
+            if (!cart) throw new NotFoundError(errorCodes.ERROR_GET_CART_NOT_FOUND, errorMessages[errorCodes.ERROR_GET_CART_NOT_FOUND]);
 
             return cart;
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20112, 'Error al obtener el carrito de compra');
+            throw new CustomError(errorCodes.ERROR_GET_CART_WITH, errorMessages[errorCodes.ERROR_GET_CART_WITH]);
         }
     }
 
@@ -35,7 +36,7 @@ export default class CartsRepository {
             return new CartsDTO(await this.dao.create({}));
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20101, 'Error al crear el carrito de compra');
+            throw new CustomError(errorCodes.ERROR_CREATE_CART, errorMessages[errorCodes.ERROR_CREATE_CART]);
         }
     }
 
@@ -44,19 +45,19 @@ export default class CartsRepository {
             return CartsDTO.fromDatabaseData(await this.dao.updateBy(cartDTO.toDatabaseData(), productDTO.toDatabaseData()));
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20102, 'Error al crear el carrito de compra con el producto');
+            throw new CustomError(errorCodes.ERROR_UPDATE_CART_WITH_PRODUCT, errorMessages[errorCodes.ERROR_UPDATE_CART_WITH_PRODUCT]);
         }
     }
 
     delete = async (cartDTO) => {
         try {
             const cart = CartsDTO.fromDatabaseData(await this.dao.delete(cartDTO.toDatabaseData()));
-            if (!cart) throw new NotFoundError(20111, 'Carrito de compra no encontrado');
+            if (!cart) throw new NotFoundError(errorCodes.ERROR_GET_CART_NOT_FOUND, errorMessages[errorCodes.ERROR_GET_CART_NOT_FOUND]);
 
             return cart;
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20140, 'Error al eliminar el carrito de compra');
+            throw new CustomError(errorCodes.ERROR_DELETE_CART, errorMessages[errorCodes.ERROR_DELETE_CART]);
         }
     }
 
@@ -65,7 +66,7 @@ export default class CartsRepository {
             return CartsDTO.fromDatabaseData(await this.dao.createBy(cartDTO.toDatabaseData(), productDTO.toDatabaseData()));
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20120, 'Error al actualizar el carrito de compra');
+            throw new CustomError(errorCodes.ERROR_CREATE_CART_WITH_PRODUCT, errorMessages[errorCodes.ERROR_CREATE_CART_WITH_PRODUCT]);
         }
     }
 
@@ -74,7 +75,7 @@ export default class CartsRepository {
             return CartsDTO.fromDatabaseData(await this.dao.update(cartDTO.toDatabaseData()));
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20120, 'Error al actualizar el carrito de compra');
+            throw new CustomError(errorCodes.ERROR_UPDATE_CART, errorMessages[errorCodes.ERROR_UPDATE_CART]);
         }
     }
 

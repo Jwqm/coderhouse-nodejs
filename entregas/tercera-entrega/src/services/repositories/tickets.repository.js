@@ -1,5 +1,6 @@
 import TicketsDTO from "../../dao/dto/tickets.dto.js";
-import { CustomError, NotFoundError } from "../../errors/custom.error.js";
+import { CustomError } from "../../errors/custom.error.js";
+import { errorCodes, errorMessages } from "../../dictionaries/errors.js"
 
 export default class TicketsRepository {
     constructor(dao) {
@@ -12,7 +13,7 @@ export default class TicketsRepository {
             return TicketsDTO.fromDatabaseData(await this.dao.create({}));
         } catch (error) {
             if (error instanceof CustomError) throw error;
-            throw new CustomError(20151, 'Error al crear el ticket de compra');
+            throw new CustomError(errorCodes.ERROR_CREATE_TICKET, errorMessages[errorCodes.ERROR_CREATE_TICKET]);
         }
     }
 
