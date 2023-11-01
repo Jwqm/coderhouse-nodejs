@@ -1,6 +1,17 @@
 import { sendResponse } from '../middlewares/response.handler.js';
 import { productsService } from "../services/repositories.service.js";
 import ProductsDTO from '../dao/dto/products.dto.js';
+import { generateProduct } from '../mocks/products.js';
+
+const mock = async (req, res, next) => {
+    try {
+        const result = generateProduct();
+
+        return sendResponse(200, { result: result })(req, res);
+    } catch (error) {
+        next(err);
+    }
+}
 
 const get = async (req, res, next) => {
     try {
@@ -58,4 +69,5 @@ export default {
     create,
     remove,
     update,
+    mock,
 };

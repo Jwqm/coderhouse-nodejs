@@ -7,6 +7,8 @@ import ProductsController from '../controllers/products.controller.js';
 
 const router = express.Router();
 
+router.get('/mockingproducts', ProductsController.mock);
+
 router.get('/', ProductsValidators.limitParam, ValidationErrorHandler, ProductsController.get);
 
 router.get('/:pid', ProductsValidators.idParam, ValidationErrorHandler, ProductsController.getBy);
