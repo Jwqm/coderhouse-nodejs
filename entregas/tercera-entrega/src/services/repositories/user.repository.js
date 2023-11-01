@@ -9,11 +9,11 @@ export default class UsersRepository {
         return this.dao.get();
     }
 
-    getBy = (user) => {
-        return this.dao.getBy(new UserDTO(user));
+    getBy = (userDTO) => {
+        return this.dao.getBy(userDTO.toDatabaseData());
     }
 
-    create = (user) => {
-        return this.dao.create(new UserDTO(user));
+    create = (userDTO) => {
+        return this.dao.create(userDTO.toDatabaseData());
     }
 }

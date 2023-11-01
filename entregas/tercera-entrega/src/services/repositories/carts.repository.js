@@ -95,6 +95,7 @@ export default class CartsRepository {
 
                 if (add) {
                     if (productDTOSearch.stock < quantity) {
+                        //throw new CustomError(10015, `Error solo quedan en stock ${product.stock} productos`);
                         failedProducts.push(productUpdateDTO);
                         continue;
                     }
@@ -114,6 +115,7 @@ export default class CartsRepository {
                     productCartDTO.quantity += quantity;
                 } else {
                     if (productCartDTO.quantity < quantity) {
+                        //throw new CustomError(10016, `Error solo puede quitar ${productCart.quantity} productos del carrito de compras`);
                         failedProducts.push(productUpdateDTO);
                         continue;
                     }

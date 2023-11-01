@@ -5,17 +5,18 @@ import GithubStrategy from 'passport-github2';
 
 import { usersService } from "../services/repositories.service.js";
 import auth from "../services/auth.js";
+import UserDTO from "../dao/dto/users.dto.js";
 
 const initializeStrategies = () => {
     passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email' }, async (req, email, password, done) => {
         const hashedPassword = await auth.createHash(password);
         req.body.password = hashedPassword;
-        const result = await usersService.create(req.body);
+        const result = await usersService.create(UserDTO.build(req.body));
         done(null, result)
     }))
 
     passport.use('login', new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
-        const user = await usersService.getBy({ email });
+        const user = await usersService.getBy(UserDTO.build({ email }));
         if (!user) return done(null, false, { message: "Usuario no encontrado" });
         const isValidPassword = await auth.validatePassword(password, user.password);
         if (!isValidPassword) return done(null, false, { message: "Credenciales incorrectas" });

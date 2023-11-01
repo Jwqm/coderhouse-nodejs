@@ -1,6 +1,5 @@
 export default class UserDTO {
-    constructor({ name, firstname, lastname, email, age, password, role, cart }) {
-        if (name) this.name = name;
+    constructor({ firstname, lastname, email, age, password, role, cart }) {
         if (firstname) this.firstname = firstname;
         if (lastname) this.lastname = lastname;
         if (email) this.email = email;
@@ -22,7 +21,7 @@ export default class UserDTO {
         if (!data) return;
         return new UserDTO({
             id: data._id ? data._id.toString() : undefined,
-            name: data.firstName,
+            firstname: data.firstName,
             lastname: data.lastName,
             email: data.email,
             age: data.age,
@@ -34,7 +33,7 @@ export default class UserDTO {
 
     toDatabaseData() {
         const databaseData = {
-            firstName: this.name,
+            firstName: this.firstname,
             lastName: this.lastname,
             email: this.email,
             age: this.age,
