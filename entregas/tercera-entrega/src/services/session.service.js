@@ -7,44 +7,44 @@ export default class SessionService {
     }
 
     static build(session) {
-        this.#generateTemporaryCarts(session);
+        this.#generateShoppingCart(session);
         return new SessionService(session);
     }
 
-    static #generateTemporaryCarts(session) {
-        if (!session.temporaryCarts) {
-            this.#initTemporaryCarts(session);
+    static #generateShoppingCart(session) {
+        if (!session.shoppingCart) {
+            this.#initShoppingCart(session);
         }
 
-        if (session.temporaryCarts.expiration) {
-            const minuteDifference = (Date.now() - session.temporaryCarts.expiration) / (1000 * 60);
-            if (minuteDifference > 5) this.#initTemporaryCarts(session);
+        if (session.shoppingCart.expiration) {
+            const minuteDifference = (Date.now() - session.shoppingCart.expiration) / (1000 * 60);
+            if (minuteDifference > 5) this.#initShoppingCart(session);
         }
 
-        if (!session.temporaryCarts.idCart) session.temporaryCarts.idCart = uuidv4();
+        if (!session.shoppingCart.idCart) session.shoppingCart.idCart = uuidv4();
 
-        return session.temporaryCarts;
+        return session.shoppingCart;
     }
 
-    static #initTemporaryCarts(session) {
-        session.temporaryCarts = {};
-        session.temporaryCarts.idCart = '';
-        session.temporaryCarts.products = [];
-        session.temporaryCarts.expiration = Date.now();
+    static #initShoppingCart(session) {
+        session.shoppingCart = {};
+        session.shoppingCart.idCart = '';
+        session.shoppingCart.products = [];
+        session.shoppingCart.expiration = Date.now();
     }
 
-    getTemporaryCarts() {
-        return this.session.temporaryCarts;
+    getShoppingCart() {
+        return this.session.shoppingCart;
     }
 
-    cleanTemporaryCarts() {
-        SessionService.#initTemporaryCarts(this.session);
+    cleanShoppingCart() {
+        SessionService.#initShoppingCart(this.session);
     }
 
     updateStockProducts(products) {
-        if (this.session.temporaryCarts && this.session.temporaryCarts.products) {
+        if (this.session.shoppingCart && this.session.shoppingCart.products) {
             products.forEach(product => {
-                const matchingProduct = this.session.temporaryCarts.products.find(item => item.id === product.id);
+                const matchingProduct = this.session.shoppingCart.products.find(item => item.id === product.id);
                 if (matchingProduct) {
                     product.stock = matchingProduct.stock;
                 }
@@ -53,41 +53,18 @@ export default class SessionService {
     }
 
     getProductBy(id) {
-        return this.session.temporaryCarts.products.find(item => item.id === id);
+        return this.session.shoppingCart.products.find(item => item.id === id);
     }
 
-    async getProductsAndCarts(req) {
-        const products = await productsService.paginate(req.query);
-        const temporaryCarts = this.getTemporaryCarts();
-        this.updateStockProductsBySession(products.payload, temporaryCarts);
-        return { products, temporaryCarts };
-    }
-
-    async getCartProductsAndTotalPrice(req) {
-        let products = [];
-        if (this.session.temporaryCarts) {
-            products = await Promise.all(
-                this.session.temporaryCarts.products.map(async (item) => {
-                    const product = this.getProductBySession(item.id, this.session.temporaryCarts) || await productsService.getBy(ProductsDTO.build({ id: req.params.pid }));
-                    if (!product.quantity) product.quantity = 0;
-                    return product;
-                })
-            );
-        }
-
-        const totalPrice = products.reduce((total, product) => total + product.price, 0);
-        return { products, totalPrice };
-    }
-
-    addProductToCart(product) {
-        const existingProduct = this.session.temporaryCarts.products.find(item => item.id === product.id);
+    addToShoppingCart(product) {
+        const existingProduct = this.session.shoppingCart.products.find(item => item.id === product.id);
         if (existingProduct && existingProduct.stock >= 1) {
             existingProduct.quantity += 1;
             existingProduct.stock -= 1;
         } else if (product.stock >= 1) {
             product.stock -= 1;
             product.quantity = 1;
-            this.session.temporaryCarts.products.push(product);
+            this.session.shoppingCart.products.push(product);
         }
     }
 }
