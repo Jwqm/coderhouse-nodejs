@@ -69,14 +69,14 @@ router.post('/purchase', auth(["USER"]), async (req, res, next) => {
         if (!cartDTO) res.render("errors", { errorMessage: 'No se pudo crear el carrito.' });
         const productsDTO = temporaryCarts.products;
         const result = await purchaseService.purchase(cartDTO, productsDTO, true);
-        if (result) {
-            sessionService.getTemporaryCarts().products = result.failedProducts;
-            if (result.suscessProducts) {
-                const ticket = await purchaseService.register(req.session.user, result.suscessProducts);
-                const { code, mail, amount, date } = ticket;
-                return res.render("ticket", { code, amount, mail, date });
-            }
+        if (result.update) {
+            sessionService.cleanTemporaryCarts();
+            const ticketDTO = await purchaseService.register(req.session.user, result.products);
+            return res.render('ticket', { ticket: ticketDTO });
+        } else {
+            temporaryCarts.products = [result.products];
         }
+
         return res.redirect(`/products`);
     } else {
         await cartsService.delete(cartDTO);
@@ -106,9 +106,6 @@ router.get('/logout', async (req, res) => {
 
 function auth(role) {
     return (req, res, next) => {
-        // Aquí puedes usar el valor de `role` y realizar la lógica de autenticación según tus necesidades
-        // Por ejemplo, verificar si el usuario tiene el rol adecuado antes de permitir el acceso.
-
         if (!req.session.user) {
             return res.redirect('/login');
         }

@@ -1,5 +1,7 @@
 import CartsDTO from "../../dao/dto/carts.dto.js";
+import ProductsDTO from "../../dao/dto/products.dto.js";
 import { CustomError, NotFoundError } from "../../errors/custom.error.js";
+import { productsService } from "../../services/repositories.service.js";
 
 export default class CartsRepository {
     constructor(dao) {
@@ -75,4 +77,60 @@ export default class CartsRepository {
             throw new CustomError(20120, 'Error al actualizar el carrito de compra');
         }
     }
+
+    updateWithProduct = async (cartDTO, productsDTO, add) => {
+        const successProducts = [];
+        const failedProducts = [];
+
+        for (const productUpdateDTO of productsDTO) {
+            try {
+                const productDTOSearch = await productsService.getBy(ProductsDTO.build({ id: productUpdateDTO.id }));
+                if (!productDTOSearch) {
+                    failedProducts.push(productsDTO);
+                    continue;
+                }
+
+                const cartDTOSearch = await this.getBy(cartDTO);
+                const quantity = parseInt(productUpdateDTO.quantity);
+
+                if (add) {
+                    if (productDTOSearch.stock < quantity) {
+                        failedProducts.push(productUpdateDTO);
+                        continue;
+                    }
+                    productDTOSearch.stock -= quantity;
+                } else {
+                    productDTOSearch.stock += quantity;
+                }
+                productDTOSearch.quantity = quantity;
+
+                let productCartDTO = cartDTOSearch.products.find((item) => item.product._id.toString() == productDTOSearch.id.toString());
+                if (!productCartDTO) {
+                    productCartDTO = { id: productDTOSearch.id.toString(), quantity: 0 };
+                    cartDTOSearch.products.push(productCartDTO);
+                }
+
+                if (add) {
+                    productCartDTO.quantity += quantity;
+                } else {
+                    if (productCartDTO.quantity < quantity) {
+                        failedProducts.push(productUpdateDTO);
+                        continue;
+                    }
+                    productCartDTO.quantity -= productUpdateDTO.quantity;
+                }
+
+                await this.update(cartDTOSearch);
+                await productsService.update(ProductsDTO.build({ id: productDTOSearch.id, stock: productDTOSearch.stock }));
+
+                successProducts.push(productUpdateDTO);
+            } catch (error) {
+                failedProducts.push(productUpdateDTO);
+            }
+        }
+
+        const update = failedProducts.length > 0 ? false : true;
+
+        return { update, products: update === false ? failedProducts : successProducts };
+    };
 }

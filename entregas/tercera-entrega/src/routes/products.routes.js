@@ -1,62 +1,20 @@
 import express from 'express';
 import * as ProductsValidators from '../validators/products.validators.js';
 import ValidationErrorHandler from '../middlewares/validation.error.handler.js';
-import { sendResponse } from '../middlewares/response.handler.js';
-import { productsService } from "../services/repositories.service.js";
 import passportCall from "../middlewares/passport.call.js";
 import executePolicies from "../middlewares/execute.policies.js";
-import ProductsDTO from '../dao/dto/products.dto.js';
+import ProductsController from '../controllers/products.controller.js';
 
 const router = express.Router();
 
-router.get('/', ProductsValidators.limitParam, ValidationErrorHandler, async (req, res, next) => {
-    try {
-        const result = await productsService.paginate(req.query);
+router.get('/', ProductsValidators.limitParam, ValidationErrorHandler, ProductsController.get);
 
-        return sendResponse(200, result)(req, res);
-    } catch (error) {
-        next(err);
-    }
-});
+router.get('/:pid', ProductsValidators.idParam, ValidationErrorHandler, ProductsController.getBy);
 
-router.get('/:pid', ProductsValidators.idParam, ValidationErrorHandler, async (req, res, next) => {
-    try {
-        const product = await productsService.getBy(ProductsDTO.build({ id: req.params.pid }));
+router.post('/', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.productBody, ValidationErrorHandler, ProductsController.create);
 
-        return sendResponse(200, product)(req, res);
-    } catch (err) {
-        next(err);
-    }
-});
+router.put('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.idParamAndProductBody, ValidationErrorHandler, ProductsController.update);
 
-router.post('/', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.productBody, ValidationErrorHandler, async (req, res, next) => {
-    try {
-        await productsService.create(ProductsDTO.build(req.body));
-
-        return sendResponse(201, { message: 'Producto creado exitosamente' })(req, res);
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.put('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.idParamAndProductBody, ValidationErrorHandler, async (req, res, next) => {
-    try {
-        await productsService.update(ProductsDTO.build({ id: req.params.pid, ...req.body }));
-
-        return sendResponse(201, { message: 'Producto actualizado exitosamente' })(req, res);
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.delete('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.idParam, ValidationErrorHandler, async (req, res, next) => {
-    try {
-        await productsManager.deleteProduct(req.params.pid);
-
-        return sendResponse(201, { message: 'Producto eliminado exitosamente' })(req, res);
-    } catch (err) {
-        next(err);
-    }
-});
+router.delete('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.idParam, ValidationErrorHandler, ProductsController.remove);
 
 export default router;

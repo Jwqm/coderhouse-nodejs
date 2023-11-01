@@ -7,24 +7,18 @@ export default class SessionService {
     }
 
     static build(session) {
-        this.generateTemporaryCarts(session);
+        this.#generateTemporaryCarts(session);
         return new SessionService(session);
     }
 
-    static generateTemporaryCarts(session) {
+    static #generateTemporaryCarts(session) {
         if (!session.temporaryCarts) {
-            session.temporaryCarts = { idCart: '', products: [] };
+            this.#initTemporaryCarts(session);
         }
 
         if (session.temporaryCarts.expiration) {
             const minuteDifference = (Date.now() - session.temporaryCarts.expiration) / (1000 * 60);
-            if (minuteDifference > 5) {
-                session.temporaryCarts.products = [];
-                session.temporaryCarts.idCart = '';
-                session.temporaryCarts.expiration = Date.now();
-            }
-        } else {
-            session.temporaryCarts.expiration = Date.now();
+            if (minuteDifference > 5) this.#initTemporaryCarts(session);
         }
 
         if (!session.temporaryCarts.idCart) session.temporaryCarts.idCart = uuidv4();
@@ -32,8 +26,19 @@ export default class SessionService {
         return session.temporaryCarts;
     }
 
+    static #initTemporaryCarts(session) {
+        session.temporaryCarts = {};
+        session.temporaryCarts.idCart = '';
+        session.temporaryCarts.products = [];
+        session.temporaryCarts.expiration = Date.now();
+    }
+
     getTemporaryCarts() {
         return this.session.temporaryCarts;
+    }
+
+    cleanTemporaryCarts() {
+        SessionService.#initTemporaryCarts(this.session);
     }
 
     updateStockProducts(products) {
