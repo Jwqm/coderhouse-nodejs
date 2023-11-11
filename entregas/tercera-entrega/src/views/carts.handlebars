@@ -1,0 +1,29 @@
+<h1 class="title">Carrito de Compras</h1>
+<div class="container">
+    {{#each products}}
+    <div class="card" id={{this.id}}>
+        <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <p class="card-text">Cantidad: {{this.quantity}}</p>
+            <p class="card-text">Precio: ${{this.price}}</p>
+            <form action="/products/detail/{{this.id}}" method="GET">
+                <button type="submit">Ver detalles</button>
+            </form>
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+<div class="container">
+    <span>Precio Total: ${{this.totalPrice}}</span>
+</div>
+<div class="container">
+    <form action="/purchase" method="POST">
+        <button type="submit">Comprar</button>
+    </form>
+</div>
+<div class="container">
+    <form action="/products" method="GET">
+        <button type="submit">Volver</button>
+    </form>
+</div>
