@@ -1,0 +1,146 @@
+[
+	{
+		"id": 1,
+		"title": "LG 20 Pulgadas",
+		"description": "Monitor LG Led 20 Pulgadas",
+		"category": "Monitor",
+		"price": 40500.99,
+		"thumbnails": [
+			"/monitor/lg/Led20.png"
+		],
+		"code": "MON-LED-20",
+		"stock": 9
+	},
+	{
+		"id": 2,
+		"title": "LG 32 Pulgadas",
+		"description": "Monitor LG Led 32 Pulgadas",
+		"category": "Monitor",
+		"price": 90000,
+		"thumbnails": [
+			"/monitor/lg/Led32.png"
+		],
+		"code": "MON-LG-LED-32",
+		"stock": 10
+	},
+	{
+		"id": 3,
+		"title": "Samsung 20 Pulgadas",
+		"description": "Monitor Samsung Led 20 Pulgadas",
+		"category": "Monitor",
+		"price": 45500.99,
+		"thumbnails": [
+			"/monitor/samsung/Led20.png"
+		],
+		"code": "MON-SAMSUNG-20",
+		"stock": 1
+	},
+	{
+		"id": 4,
+		"title": "Samsung 32 Pulgadas",
+		"description": "Monitor Samsung Led 32 Pulgadas",
+		"category": "Monitor",
+		"price": 95000,
+		"thumbnails": [
+			"/monitor/samsung/Led32.png"
+		],
+		"code": "MON-SAMSUNG-LED-32",
+		"stock": 15
+	},
+	{
+		"id": 5,
+		"title": "Samsung 15 Pulgadas",
+		"description": "Monitor Samsung Led 15 Pulgadas",
+		"category": "Monitor",
+		"price": 6000,
+		"thumbnails": [
+			"/monitor/samsung/Led15.png"
+		],
+		"code": "MON-SAMSUNG-LED-15",
+		"stock": 19
+	},
+	{
+		"id": 6,
+		"title": "LG 15 Pulgadas",
+		"description": "Monitor LG Led 15 Pulgadas",
+		"category": "Monitor",
+		"price": 6000,
+		"thumbnails": [
+			"/monitor/lg/Led15.png"
+		],
+		"code": "MON-LG-LED-15",
+		"stock": 10
+	},
+	{
+		"id": 7,
+		"title": "Samsung 45 Pulgadas",
+		"description": "Monitor Samsung Led 45 Pulgadas",
+		"category": "Monitor",
+		"price": 6000,
+		"thumbnails": [
+			"/monitor/samsung/Led45.png"
+		],
+		"code": "MON-SAMSUNG-LED-45",
+		"stock": 14
+	},
+	{
+		"id": 8,
+		"title": "LG 45 Pulgadas",
+		"description": "Monitor LG Led 45 Pulgadas",
+		"category": "Monitor",
+		"price": 6000,
+		"thumbnails": [
+			"/monitor/lg/Led45.png"
+		],
+		"code": "MON-LG-LED-45",
+		"stock": 14
+	},
+	{
+		"id": 9,
+		"title": "Samsung 55 Pulgadas",
+		"description": "Monitor Samsung Led 55 Pulgadas",
+		"category": "Monitor",
+		"price": 6000,
+		"thumbnails": [
+			"/monitor/samsung/Led55.png"
+		],
+		"code": "MON-SAMSUNG-LED-55",
+		"stock": 1
+	},
+	{
+		"id": 10,
+		"title": "LG 55 Pulgadas",
+		"description": "Monitor LG Led 55 Pulgadas",
+		"category": "Monitor",
+		"price": 6000,
+		"thumbnail": "/monitor/lg/Led55.png",
+		"thumbnails": [
+			"/monitor/lg/Led55.png"
+		],
+		"code": "MON-LG-LED-55",
+		"stock": 4
+	},
+	{
+		"id": 11,
+		"title": "JOSE",
+		"description": "asd",
+		"code": "a22",
+		"price": "123,232",
+		"stock": "232",
+		"category": "AS"
+	},
+	{
+		"id": 12,
+		"title": "aaa",
+		"description": "ass",
+		"code": "A",
+		"price": 100,
+		"status": true,
+		"stock": 1233,
+		"category": "asds",
+		"thumbnails": [
+			"zxc",
+			"zxc"
+		]
+	}
+]
