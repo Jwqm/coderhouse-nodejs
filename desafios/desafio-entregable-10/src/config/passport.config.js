@@ -1,8 +1,9 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import GithubStrategy from 'passport-github2';
-
+import config from "./config.js";
 import { usersService } from "../services/repositories.service.js";
 import auth from "../services/auth.js";
 import UserDTO from "../dao/dto/users.dto.js";
@@ -37,6 +38,27 @@ const initializeStrategies = () => {
             done(null, user);
         }
     }))
+
+    passport.use('google', new GoogleStrategy({
+        clientID: config.google.CLIENT,
+        clientSecret: config.google.SECRET,
+        callbackURL: 'http://localhost:8080/api/sessions/googlecallback',
+        passReqToCallback: true
+    }, async (req, accessToken, refreshToken, profile, done) => {
+        const { _json } = profile;
+        const user = await usersService.getBy({ email: _json.email });
+        if (user) {
+            return done(null, user);
+        } else {
+            const newUser = {
+                firstName: _json.given_name,
+                lastName: _json.family_name,
+                email: _json.email
+            }
+            const result = await usersService.createUser(newUser);
+            done(null, result);
+        }
+    }));
 
     passport.use("jwt", new JWTStrategy({
         jwtFromRequest: ExtractJwt.fromExtractors([

@@ -12,4 +12,8 @@ export default class UsersDAO {
     create = (userDTO) => {
         return userModel.create(userDTO);
     }
+
+    updateUser = (id, userDTO) => {
+        return userModel.updateOne(id, userDTO);
+    }
 }
