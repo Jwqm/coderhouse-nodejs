@@ -24,7 +24,7 @@ router.post('/products/addToShoppingCart/:pid', auth(["USER"]), addToShoppingCar
 
 router.post('/purchase', auth(["USER"]), purchase);
 
-router.get('/', auth(["NO_AUTH"]), profile);
+router.get('/', auth(["PUBLIC"]), profile);
 
 router.get('/register', renderRegisterPage);
 
@@ -32,11 +32,11 @@ router.get('/login', renderLoginPage);
 
 router.get('/logout', logout);
 
-router.get('/password-restore', auth(['NO_AUTH']), passwordRestore);
+router.get('/password-restore', auth(["NO_AUTH"]), passwordRestore);
 
 function auth(role) {
     return (req, res, next) => {
-        if (role[0] === "NO_AUTH" || role[0] === "PUBLIC" ) return next();
+        if (role[0] === "NO_AUTH" || role[0] === "PUBLIC") return next();
         if (!req.session.user) {
             return res.redirect('/login');
         }
@@ -143,6 +143,7 @@ async function passwordRestore(req, res) {
 
 function profile(req, res, next) {
     const userSession = req.session.user;
+    if (!userSession) return res.redirect('/login');
     const userDTO = UserDTO.build({ name: userSession.firstName, lastname: userSession.lastName, age: userSession.age, email: userSession.email });
     res.render('profile', { user: userDTO });
 }
