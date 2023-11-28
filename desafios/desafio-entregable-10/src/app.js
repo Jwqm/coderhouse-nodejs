@@ -3,7 +3,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import handlebars from 'express-handlebars';
 import errorHandler from './middlewares/response.error.handler.js';
-import { __dirname } from "./utils.js";
+import __dirname from "./utils.js";
 import config from "./config/config.js"
 import http from 'http';
 import mongoose from 'mongoose';
