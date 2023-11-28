@@ -10,6 +10,8 @@ import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import { addLogger } from './middlewares/logger.handler.js';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUIExpress from 'swagger-ui-express';
 
 import productsRoutes from './routes/products.routes.js';
 import cartsRoutes from './routes/carts.routes.js';
@@ -37,6 +39,18 @@ initializeStrategies();
 app.use(passport.initialize());
 
 const connection = mongoose.connect(config.mongo.URL);
+const swaggerSpecOptions = {
+    definition: {
+        openapi:'3.0.1',
+        info: {
+            title:'Todo Hogar docs',
+            description: 'Aplicación para compra de electrodomesticos.'
+        }
+        },
+        apis: [`${__dirname}/docs/**/*.yml`]
+}
+const swaggerSpec = swaggerJSDoc(swaggerSpecOptions);
+app.use('/apidocs',swaggerUIExpress.serve,swaggerUIExpress.setup(swaggerSpec));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
