@@ -1,0 +1,227 @@
+openapi: 3.0.0
+info:
+  title: API Carts
+  version: 1.0.0
+paths:
+  /carts:
+    get:
+      summary: Obtener todos los carritos
+      tags:
+        - Api Carts
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Número máximo de carritos a devolver
+      responses:
+        "200":
+          description: Éxito
+
+    post:
+      summary: Crear un nuevo carrito
+      tags:
+        - Api Carts
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties: {}
+              required:
+                - data
+              example:
+                data: {}
+      responses:
+        "201":
+          description: Carrito creado con éxito
+
+  /carts/{cid}:
+    get:
+      summary: Obtener un carrito por ID
+      tags:
+        - Api Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: ID del carrito
+        - in: query
+          name: units
+          schema:
+            type: integer
+          description: Número de unidades a devolver
+      responses:
+        "200":
+          description: Éxito
+
+    put:
+      summary: Actualizar un carrito por ID
+      tags:
+        - Api Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: ID del carrito
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartUpdateBody'
+      responses:
+        "200":
+          description: Carrito actualizado con éxito
+
+    delete:
+      summary: Eliminar un carrito por ID
+      tags:
+        - Api Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: ID del carrito
+        - in: query
+          name: units
+          schema:
+            type: integer
+          description: Número de unidades a eliminar
+      responses:
+        "204":
+          description: Carrito eliminado con éxito
+
+  /carts/{cid}/products/{pid}:
+    post:
+      summary: Actualizar productos en un carrito por ID de carrito y ID de producto
+      tags:
+        - Api Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: ID del carrito
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartProductUpdateBody'
+      responses:
+        "200":
+          description: Productos en el carrito actualizados con éxito
+
+  /carts/{cid}/products/{pid}/{units}:
+    post:
+      summary: Actualizar productos en un carrito por ID de carrito, ID de producto y número de unidades de producto
+      tags:
+        - Api Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: ID del carrito
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+        - in: path
+          name: units
+          required: true
+          schema:
+            type: integer
+          description: Número de unidades 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartProductUpdateBody'
+      responses:
+        "200":
+          description: Productos en el carrito actualizados con éxito
+
+    delete:
+      summary: Eliminar productos de un carrito por ID de carrito y ID de producto
+      tags:
+        - Api Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: ID del carrito
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+        - in: query
+          name: units
+          schema:
+            type: integer
+          description: Número de unidades a eliminar
+      responses:
+        "204":
+          description: Productos en el carrito eliminados con éxito
+
+components:
+  schemas:
+    CartUpdateBody:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: mongo-id
+                description: ID del producto
+              quantity:
+                type: integer
+                minimum: 1
+                description: Número de unidades
+          description: Lista de productos a actualizar en el carrito
+      required:
+        - products
+      example:
+        products:
+          - id: "mongo-id-1"
+            quantity: 2
+          - id: "mongo-id-2"
+            quantity: 3
+
+    CartProductUpdateBody:
+      type: object
+      properties:
+        data:
+          type: object
+          properties: {}
+      required:
+        - data
+      example:
+        data: {}
