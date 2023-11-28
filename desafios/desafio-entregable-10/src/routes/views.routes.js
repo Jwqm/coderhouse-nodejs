@@ -1,10 +1,11 @@
 import express from 'express';
-import { productsService } from "../services/repositories.service.js";
+import { productsService, cartsService } from "../services/repositories.service.js";
 import ProductsDTO from '../dao/dto/products.dto.js';
 import SessionService from '../services/session.service.js';
-import { cartsService } from '../services/repositories.service.js';
 import { purchaseService } from '../services/purchase.service.js';
 import UserDTO from '../dao/dto/users.dto.js';
+import config from '../config/config.js';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ router.post('/products/addToShoppingCart/:pid', auth(["USER"]), addToShoppingCar
 
 router.post('/purchase', auth(["USER"]), purchase);
 
-router.get('/', auth(["NO_AUTH"]), profile);
+router.get('/', auth(["PUBLIC"]), profile);
 
 router.get('/register', renderRegisterPage);
 
@@ -31,12 +32,14 @@ router.get('/login', renderLoginPage);
 
 router.get('/logout', logout);
 
+router.get('/password-restore', auth(["NO_AUTH"]), passwordRestore);
+
 function auth(role) {
     return (req, res, next) => {
+        if (role[0] === "NO_AUTH" || role[0] === "PUBLIC") return next();
         if (!req.session.user) {
             return res.redirect('/login');
         }
-        if (role[0] === "NO_AUTH") return next();
         if (!role.includes(req.session.user.role.toUpperCase())) {
             return res.redirect(`/products`);
         }
@@ -119,8 +122,28 @@ async function purchase(req, res, next) {
     }
 }
 
+async function passwordRestore(req, res) {
+    const { token } = req.query;
+    if (!token) return res.render('RestorePasswordError', { error: 'Ruta inválida, favor de solicitar un nuevo link de restablecimiento' });
+    //El hecho de que me pase un token, NO SIGNIFICA QUE YA SEA VÁLIDO, falta corroborar:
+    //1. ¿El token está expirado?
+    //2. ¿El token siquiera es válido?
+    try {
+        jwt.verify(token, config.jwt.SECRET);
+        res.render('PasswordRestore');
+    } catch (error) {
+        console.log(error);
+        console.log(Object.keys(error));
+        if (error.expiredAt) {
+            return res.render('RestorePasswordError', { error: "El link de este correo expiró, favor de solicitar un nuevo correo" });
+        }
+        res.render('RestorePasswordError', { error: 'Link inválido o corrupto, favor de solicitar un nuevo correo' });
+    }
+}
+
 function profile(req, res, next) {
     const userSession = req.session.user;
+    if (!userSession) return res.redirect('/login');
     const userDTO = UserDTO.build({ name: userSession.firstName, lastname: userSession.lastName, age: userSession.age, email: userSession.email });
     res.render('profile', { user: userDTO });
 }
