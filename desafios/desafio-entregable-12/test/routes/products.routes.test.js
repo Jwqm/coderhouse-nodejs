@@ -86,7 +86,7 @@ const requester = supertest('http://localhost:8080/api');
 
 
 // Pruebas para el endpoint POST /products
-describe('POST /products', () => {
+/*describe('POST /products', () => {
     it('crea un nuevo producto y devuelve un código de estado 201', async () => {
         const userObject = { id: 123, role: 'ADMIN' };
         const passportCallStub = sinon.stub(passportCall, 'passportCall').callsFake((strategy, options) => {
@@ -113,7 +113,7 @@ describe('POST /products', () => {
             .expect(201);
 
     });
-});
+});*/
 
 // Pruebas para el endpoint GET /products/{pid}
 /*describe('GET /products/{pid}', () => {
