@@ -1,8 +1,5 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
-import sinon from 'sinon';
-import { response } from 'express';
-import passportCall from '../../src/middlewares/passport.call.js';
 
 const requester = supertest('http://localhost:8080/api');
 

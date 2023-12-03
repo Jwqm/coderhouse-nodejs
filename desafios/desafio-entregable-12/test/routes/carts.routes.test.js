@@ -4,7 +4,7 @@ import { expect } from 'chai';
 const requester = supertest('http://localhost:8080/api');
 
 describe('Carts Controller', () => {
-    describe('GET /', () => {
+    describe('GET /carts', () => {
         it('devuelve todos los carritos de compra, con codigo de estado 200', async () => {
             const mockCarts = {
                 status: "success",
@@ -33,7 +33,7 @@ describe('Carts Controller', () => {
         });
     });
 
-    describe('GET /:cid', () => {
+    describe('GET /carts/:cid', () => {
         it('devuelve un carrito de compra por ID, con codigo de estado 200', async () => {
             const mockCarts = {
                 status: "success",
@@ -73,7 +73,7 @@ describe('Carts Controller', () => {
         });
     });
 
-    describe('POST /', () => {
+    describe('POST /carts', () => {
         it('crea un carrito de compras, con codigo de estado 200', async () => {
             const mockCarts = {
                 status: "success",
