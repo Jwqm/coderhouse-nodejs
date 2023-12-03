@@ -42,7 +42,7 @@
   "scripts": {
     "dev": "node src/app.js --mode=dev",
     "start": "node src/app.js",
-    "test": "mocha test/routes/carts.routes.test.js"
+    "test": "mocha test/routes/products.routes.test.js"
   },
   "author": "jwquezada",
   "license": "ISC"

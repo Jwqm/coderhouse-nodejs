@@ -45,7 +45,8 @@ router.get('/current', executePolicies(["AUTH"]), (req, res, next) => {
     return sendResponse(200, { message: 'Usuario logueado correctamente' })(req, res);
 })
 
-router.get('/google', executePolicies(["NO_AUTH"]), passportCall('google', { scope: ['profile', 'email'], strategyType: 'OAUTH' }), (req, res) => { })
+router.get('/google'
+    , executePolicies(["NO_AUTH"]), passportCall('google', { scope: ['profile', 'email'], strategyType: 'OAUTH' }), (req, res) => { })
 router.get('/googlecallback', executePolicies(["NO_AUTH"]), passportCall('google', { strategyType: 'OAUTH' }), async (req, res, next) => {
     req.session.user = req.user;
     try {
@@ -87,13 +88,12 @@ router.put('/password-restore', executePolicies(["PUBLIC"]), async (req, res, ne
         if (isSamePassword) throw new UnauthorizedError(40022, 'La nueva contraseña no puede ser igual a la anterior');
         //Hashear mi nuevo password
         const hashNewPassword = await authService.createHash(newPassword);
-        await usersService.update( {_id: user._id}, UserDTO.build({ password: hashNewPassword }));
+        await usersService.update({ _id: user._id }, UserDTO.build({ password: hashNewPassword }));
         return sendResponse(200, { message: 'Mail enviado' })(req, res);
 
     } catch (error) {
         console.log(error);
         next(error);
-        //throw new BadRequestError(40025,'Token invalido');
     }
 });
 
