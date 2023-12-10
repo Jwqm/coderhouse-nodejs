@@ -1,0 +1,161 @@
+openapi: 3.0.0
+info:
+  title: API de Productos
+  version: 1.0.0
+paths:
+  /products/mock:
+    get:
+      summary: Obtener datos de prueba para productos
+      tags:
+        - Api Products
+      responses:
+        '200':
+          description: Éxito
+
+  /products:
+    get:
+      summary: Obtener lista de productos
+      tags:
+        - Api Products
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+          description: Número máximo de productos a devolver
+      responses:
+        '200':
+          description: Éxito
+
+    post:
+      summary: Crear un nuevo producto
+      tags:
+        - Api Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductBody'
+      responses:
+        '201':
+          description: Producto creado con éxito
+
+  /products/{pid}:
+    get:
+      summary: Obtener un producto por ID
+      tags:
+        - Api Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+      responses:
+        '200':
+          description: Éxito
+
+    put:
+      summary: Actualizar un producto por ID
+      tags:
+        - Api Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdateBody'
+      responses:
+        '200':
+          description: Producto actualizado con éxito
+
+    delete:
+      summary: Eliminar un producto por ID
+      tags:
+        - Api Products
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: ID del producto
+      responses:
+        '204':
+          description: Producto eliminado con éxito
+
+components:
+  schemas:
+    ProductBody:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          description: El título es obligatorio y debe ser una cadena de texto
+        description:
+          type: string
+          minLength: 1
+          description: La descripción es obligatoria y debe ser una cadena de texto
+        code:
+          type: string
+          minLength: 1
+          description: El código es obligatorio y debe ser una cadena de texto
+        price:
+          type: number
+          description: El precio es obligatorio y debe ser un número decimal
+        status:
+          type: boolean
+          description: El estado es obligatorio y debe ser un valor booleano
+        stock:
+          type: number
+          description: El stock es obligatorio y debe ser un número
+        category:
+          type: string
+          minLength: 1
+          description: La categoría es obligatoria y debe ser una cadena de texto
+        thumbnails:
+          type: array
+          description: Los thumbnails deben ser un arreglo
+          items:
+            type: string
+
+    ProductUpdateBody:
+      type: object
+      properties:
+        title:
+          type: string
+          description: El título debe ser una cadena de texto (opcional)
+        description:
+          type: string
+          description: La descripción debe ser una cadena de texto (opcional)
+        code:
+          type: string
+          description: El código debe ser una cadena de texto (opcional)
+        price:
+          type: number
+          description: El precio debe ser un número decimal (opcional)
+        status:
+          type: boolean
+          description: El estado debe ser un valor booleano (opcional)
+        stock:
+          type: number
+          description: El stock debe ser un número (opcional)
+        category:
+          type: string
+          description: La categoría debe ser una cadena de texto (opcional)
+        thumbnails:
+          type: array
+          description: Los thumbnails deben ser un arreglo (opcional)
+          items:
+            type: string
