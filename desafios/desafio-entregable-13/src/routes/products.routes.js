@@ -13,10 +13,10 @@ router.get('/', ProductsValidators.limitParam, ValidationErrorHandler, ProductsC
 
 router.get('/:pid', ProductsValidators.idParam, ValidationErrorHandler, ProductsController.getBy);
 
-router.post('/', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.productBody, ValidationErrorHandler, ProductsController.create);
+router.post('/', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN", "PREMIUM"]), ProductsValidators.productBody, ValidationErrorHandler, ProductsController.create);
 
 router.put('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.idParamAndProductBody, ValidationErrorHandler, ProductsController.update);
 
-router.delete('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN"]), ProductsValidators.idParam, ValidationErrorHandler, ProductsController.remove);
+router.delete('/:pid', passportCall("jwt", { strategyType: "JWT" }), executePolicies(["ADMIN", "PREMIUM"]), ProductsValidators.idParam, ValidationErrorHandler, ProductsController.remove);
 
 export default router;

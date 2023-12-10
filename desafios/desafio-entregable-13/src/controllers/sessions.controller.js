@@ -16,8 +16,6 @@ const login = async (req, res) => {
     const tokenizedUser = UserDTO.getTokenDTOFrom(req.user);
     const token = jwt.sign(tokenizedUser, config.jwt.SECRET, { expiresIn: "1d" });
     res.cookie(config.jwt.COOKIE, token);
-    res.cookie('authCookie', token);
-    res.cookie('authToken', token);
     req.session.user = req.user;
     return sendResponse(200, { message: 'Usuario logueado correctamente' })(req, res);
 }
@@ -79,7 +77,6 @@ const restorePassword = async (req, res, next) => {
         return sendResponse(200, { message: 'Mail enviado' })(req, res);
 
     } catch (error) {
-        console.log(error);
         next(error);
     }
 };

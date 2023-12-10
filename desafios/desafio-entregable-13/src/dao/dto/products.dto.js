@@ -1,5 +1,5 @@
 export default class ProductsDTO {
-    constructor({ id, title, description, category, price, thumbnails, code, stock, quantity }) {
+    constructor({ id, title, description, category, price, thumbnails, code, stock, quantity, owner }) {
         if (id) this.id = id;
         if (title) this.title = title;
         if (description) this.description = description;
@@ -9,6 +9,7 @@ export default class ProductsDTO {
         if (code) this.code = code;
         if (stock) this.stock = stock;
         if (quantity) this.quantity = quantity;
+        if (owner) this.owner = owner;
     }
 
     static build(data) {
@@ -27,6 +28,7 @@ export default class ProductsDTO {
             code: data.code,
             stock: data.stock,
             quantity: data.quantity,
+            owner: data.owner,
         });
     }
 
@@ -41,6 +43,7 @@ export default class ProductsDTO {
             code: this.code,
             stock: this.stock,
             quantity: this.quantity,
+            owner: this.owner,
         };
 
         for (const prop in databaseData) {

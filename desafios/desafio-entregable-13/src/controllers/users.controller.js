@@ -32,8 +32,19 @@ const create = async (req, res, next) => {
     }
 }
 
+const update = async (req, res, next) => {
+    try {
+        const result = await usersService.update(req.user.id, UsersDTO.build(req.body));
+
+        return sendResponse(200, { message: 'Usuario actualizado exitosamente', result: result })(req, res);
+    } catch (err) {
+        next(err);
+    }
+}
+
 export default {
     get,
     getBy,
     create,
+    update,
 };

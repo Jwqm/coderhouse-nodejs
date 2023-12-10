@@ -14,12 +14,10 @@ import swaggerUIExpress from 'swagger-ui-express';
 import productsRoutes from './routes/products.routes.js';
 import cartsRoutes from './routes/carts.routes.js';
 import sessionsRoutes from './routes/sessions.routes.js';
+import usersRoutes from './routes/users.routes.js';
 import viewsRoutes from './routes/views.routes.js';
 import logsRoutes from './routes/logs.routes.js';
 import initializeStrategies from './config/passport.config.js';
-
-import jwt from 'jsonwebtoken';
-const secretKey = 'jwtSecret'; // Cambia esto por una clave secreta segura
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -64,42 +62,9 @@ initializeStrategies();
 app.use('/api/products', productsRoutes);
 app.use('/api/carts', cartsRoutes);
 app.use('/api/sessions', sessionsRoutes);
+app.use('/api/users', usersRoutes);
 app.use('/', logsRoutes);
 app.use("/", viewsRoutes);
 app.use(errorHandler);
-
-app.post('/test/login', (req, res) => {
-    // Verifica las credenciales del usuario
-    const { username, password } = req.body;
-
-    // Lógica de autenticación aquí...
-
-    // Si la autenticación es exitosa, genera un token JWT y envíalo al cliente
-    const token = jwt.sign({ username }, secretKey, { expiresIn: '1m' });
-    res.cookie('authCookie', token);
-    res.cookie('authToken', token);
-    
-    res.clearCookie('authCookie');
-    res.clearCookie('authToken');
-    res.json({ message: 'Inicio de sesión exitoso' });
-});
-
-app.get('/test/secure-route', (req, res) => {
-    // Verifica la presencia y validez del token en la cookie
-    const token = req.cookies.authToken;
-
-    if (!token) {
-        return res.status(401).json({ message: 'No se proporcionó el token de autenticación' });
-    }
-
-    jwt.verify(token, secretKey, (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ message: 'Token no válido' });
-        }
-
-        // El token es válido, realiza acciones seguras aquí...
-        res.json({ message: 'Ruta segura alcanzada', user: decoded.username });
-    });
-});
 
 server.on("error", error => console.log(`Server error ${error}`));

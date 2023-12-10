@@ -18,13 +18,11 @@ export default class CloudStorageService {
 
         return new Promise((resolve,reject)=>{
             blobStream.on('error',error=>{
-                console.log(error);
                 reject(error);
             })
             blobStream.on('finish',()=>{
                 //Si llegaste hasta aquí, ya se escribió en el bucket
                 const publicURL = `https://storage.googleapis.com/${this.bucket}/${blob.name}`
-                console.log(publicURL);
                 resolve(publicURL);
             })
             blobStream.end(file.buffer);

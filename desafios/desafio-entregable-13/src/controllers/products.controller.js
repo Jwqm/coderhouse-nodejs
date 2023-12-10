@@ -35,7 +35,7 @@ const getBy = async (req, res, next) => {
 
 const create = async (req, res, next) => {
     try {
-        const result = await productsService.create(ProductsDTO.build(req.body));
+        const result = await productsService.create(ProductsDTO.build({ owner: req.user.id, ...req.body }));
 
         return sendResponse(201, { message: 'Producto creado exitosamente', result: result })(req, res);
     } catch (err) {
@@ -55,9 +55,9 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
     try {
-        await productsManager.deleteProduct(req.params.pid);
+        const result = await productsService.delete(ProductsDTO.build({ id: req.params.pid }), req.user);
 
-        return sendResponse(201, { message: 'Producto eliminado exitosamente' })(req, res);
+        return sendResponse(201, { message: 'Producto eliminado exitosamente', result: result })(req, res);
     } catch (err) {
         next(err);
     }

@@ -1,5 +1,5 @@
 import ProductsDTO from "../../dao/dto/products.dto.js";
-import { CustomError, NotFoundError } from "../../errors/custom.error.js";
+import { CustomError, NotFoundError, UnauthorizedError } from "../../errors/custom.error.js";
 import { errorCodes, errorMessages } from "../../dictionaries/errors.js"
 
 export default class ProductsRepository {
@@ -111,11 +111,11 @@ export default class ProductsRepository {
         }
     }
 
-    delete = async (productDTO) => {
+    delete = async (productDTO, userDTO) => {
         try {
-            const product = ProductsDTO.fromDatabaseData(await this.dao.delete(productDTO.toDatabaseData()));
-            if (!product) throw new NotFoundError(errorCodes.ERROR_GET_PRODUCT_NOT_FOUND, errorMessages[errorCodes.ERROR_GET_PRODUCT_NOT_FOUND]);
-
+            const product = await this.getBy(productDTO);
+            if (userDTO.role === 'premium' && product.owner !== userDTO.id) throw new UnauthorizedError(errorCodes.ERROR_DELETE_USER_PRODUCT, errorMessages[errorCodes.ERROR_DELETE_USER_PRODUCT]);
+            await this.dao.delete(productDTO.toDatabaseData())
             return product;
         } catch (error) {
             if (error instanceof CustomError) throw error;

@@ -1,4 +1,5 @@
 import passport from "passport";
+import { UnauthorizedError } from '../errors/custom.error.js';
 
 const passportCall = (strategy, options = {}) => {
     return (req, res, next) => {
@@ -10,10 +11,12 @@ const passportCall = (strategy, options = {}) => {
             if (!user) {
                 switch (options.strategyType) {
                     case "LOCALS": {
-                        return res.status(401).send({
+                        throw new UnauthorizedError(40000, info.message ? info.message : info.toString());
+
+                        /*return res.status(401).send({
                             status: "error",
                             error: info.message ? info.message : info.toString(),
-                        });
+                        });*/
                     }
                     case "JWT": {
                         req.user = null;

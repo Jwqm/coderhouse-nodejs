@@ -14,6 +14,6 @@ export default class UsersDAO {
     }
 
     updateUser = (id, userDTO) => {
-        return userModel.updateOne(id, userDTO);
+        return userModel.updateOne({ _id: id }, { $set: userDTO });
     }
 }

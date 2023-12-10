@@ -48,7 +48,6 @@ function auth(role) {
 }
 
 async function products(req, res, next) {
-    console.log(req.cookies);
     const result = await productsService.paginate(req.query);
     req.sessionService.updateStockProducts(result.payload);
     const shoppingCart = req.sessionService.getShoppingCart();
@@ -133,8 +132,6 @@ async function passwordRestore(req, res) {
         jwt.verify(token, config.jwt.SECRET);
         res.render('PasswordRestore');
     } catch (error) {
-        console.log(error);
-        console.log(Object.keys(error));
         if (error.expiredAt) {
             return res.render('RestorePasswordError', { error: "El link de este correo expiró, favor de solicitar un nuevo correo" });
         }
@@ -143,7 +140,6 @@ async function passwordRestore(req, res) {
 }
 
 function profile(req, res, next) {
-    console.log(req.cookies);
     const userSession = req.session.user;
     if (!userSession) return res.redirect('/login');
     const userDTO = UserDTO.build({ name: userSession.firstName, lastname: userSession.lastName, age: userSession.age, email: userSession.email });

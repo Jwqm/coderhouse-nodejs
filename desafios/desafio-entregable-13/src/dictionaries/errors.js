@@ -16,6 +16,7 @@ export const errorCodes = {
     ERROR_CREATE_PRODUCT_CODE_DUPLICATE: "20021",
     ERROR_UPDATE_PRODUCT: "20030",
     ERROR_DELETE_PRODUCT: "20040",
+    ERROR_DELETE_USER_PRODUCT: "20045",
     //Tickets
     ERROR_CREATE_TICKET: "20200",
 };
@@ -38,6 +39,7 @@ export const errorMessages = {
     [errorCodes.ERROR_CREATE_PRODUCT_CODE_DUPLICATE]: 'Error ya existe un producto con el código ingresado',
     [errorCodes.ERROR_UPDATE_PRODUCT]: 'Error al actualizar el producto',
     [errorCodes.ERROR_DELETE_PRODUCT]: 'Error al eliminar el producto',
+    [errorCodes.ERROR_DELETE_USER_PRODUCT]: 'Error al eliminar el producto, el rol del usuario no tiene permitido eliminar productos',
     //Tickets
     [errorCodes.ERROR_CREATE_TICKET]: 'Error al crear el ticket',
 };
