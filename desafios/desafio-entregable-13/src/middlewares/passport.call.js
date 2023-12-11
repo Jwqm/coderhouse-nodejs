@@ -11,12 +11,10 @@ const passportCall = (strategy, options = {}) => {
             if (!user) {
                 switch (options.strategyType) {
                     case "LOCALS": {
-                        throw new UnauthorizedError(40000, info.message ? info.message : info.toString());
-
-                        /*return res.status(401).send({
+                        return res.status(401).send({
                             status: "error",
                             error: info.message ? info.message : info.toString(),
-                        });*/
+                        });
                     }
                     case "JWT": {
                         req.user = null;

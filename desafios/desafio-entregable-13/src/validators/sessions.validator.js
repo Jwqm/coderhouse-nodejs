@@ -6,7 +6,7 @@ export const loginBody = [
 ];
 
 export const registerBody = [
-    body('firstname').notEmpty().withMessage('La nombre es obligatorio').isString().withMessage('El nombre debe ser una cadena de texto'),
+    body('firstname').notEmpty().withMessage('El nombre es obligatorio').isString().withMessage('El nombre debe ser una cadena de texto'),
     body('lastname').notEmpty().withMessage('El apellido es obligatorio').isString().withMessage('El apellido debe ser una cadena de texto'),
     body('email').notEmpty().withMessage('El email es obligatorio').isString().withMessage('El título debe ser una cadena de texto'),
     body('age').notEmpty().withMessage('La edad es obligatoria').isNumeric().withMessage('La edad debe ser un numero'),

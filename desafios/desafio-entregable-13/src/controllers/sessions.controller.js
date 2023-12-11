@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import config from '../config/config.js';
 import MailerService from '../services/mailer.service.js';
 import DMailTemplates from '../constants/dmail.templates.js';
-import UserDTO from '../dao/dto/users.dto.js';
+import UsersDTO from '../dao/dto/users.dto.js';
 import { usersService } from "../services/repositories.service.js";
 import authService from '../services/auth.js';
 
@@ -13,10 +13,13 @@ const register = async (req, res) => {
 }
 
 const login = async (req, res) => {
-    const tokenizedUser = UserDTO.getTokenDTOFrom(req.user);
+    const tokenizedUser = UsersDTO.getTokenDTOFrom(req.user);
     const token = jwt.sign(tokenizedUser, config.jwt.SECRET, { expiresIn: "1d" });
     res.cookie(config.jwt.COOKIE, token);
     req.session.user = req.user;
+
+    await usersService.update(tokenizedUser.id.toString(), UsersDTO.build({ last_connection: new Date()}));
+
     return sendResponse(200, { message: 'Usuario logueado correctamente' })(req, res);
 }
 
@@ -42,7 +45,7 @@ const applyGoogleCallback = async (req, res) => {
     catch (error) {
         console.log(`Falló envío de correo para ${req.user.email}`)
     }
-    const tokenizedUser = UserDTO.getTokenDTOFrom(req.user);
+    const tokenizedUser = UsersDTO.getTokenDTOFrom(req.user);
     const token = jwt.sign(tokenizedUser, config.jwt.SECRET, { expiresIn: '1d' });
     res.cookie(config.jwt.COOKIE, token);
     return sendResponse(200, { message: 'Usuario logueado correctamente' })(req, res);
@@ -50,7 +53,7 @@ const applyGoogleCallback = async (req, res) => {
 
 const passwordRestoreRequest = async (req, res) => {
     const { email } = req.body;
-    const user = await usersService.getBy(UserDTO.build({ email }));
+    const user = await usersService.getBy(UsersDTO.build({ email }));
     if (!user) throw new UnauthorizedError(40010, 'Usuario no existe');
     const token = jwt.sign({ email }, config.jwt.SECRET, { expiresIn: '1h' });
     const mailerService = new MailerService();
@@ -65,7 +68,7 @@ const restorePassword = async (req, res, next) => {
         //El token es válido?
         const { email } = jwt.verify(token, config.jwt.SECRET);
         //El usuario sí está en la base?
-        const user = await usersService.getBy(UserDTO.build({ email }));
+        const user = await usersService.getBy(UsersDTO.build({ email }));
         if (!user) throw new UnauthorizedError(40021, 'Usuario no existe');
 
         //¿No será la misma contraseña que ya tiene?
@@ -73,7 +76,7 @@ const restorePassword = async (req, res, next) => {
         if (isSamePassword) throw new UnauthorizedError(40022, 'La nueva contraseña no puede ser igual a la anterior');
         //Hashear mi nuevo password
         const hashNewPassword = await authService.createHash(newPassword);
-        await usersService.update({ _id: user._id }, UserDTO.build({ password: hashNewPassword }));
+        await usersService.update(user._id, UsersDTO.build({ password: hashNewPassword }));
         return sendResponse(200, { message: 'Mail enviado' })(req, res);
 
     } catch (error) {

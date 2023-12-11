@@ -25,7 +25,9 @@ router.get('/current', executePolicies(["AUTH"]), SessionsController.current);
 
 router.get('/google', executePolicies(["NO_AUTH"]), passportCall('google', { scope: ['profile', 'email'], strategyType: 'OAUTH' }), (req, res) => { })
 router.get('/googlecallback', executePolicies(["NO_AUTH"]), passportCall('google', { strategyType: 'OAUTH' }), SessionsController.applyGoogleCallback);
+
 router.post('/passwordRestoreRequest', executePolicies(["PUBLIC"]), SessionsController.passwordRestoreRequest);
+
 router.put('/password-restore', executePolicies(["PUBLIC"]), SessionsController.restorePassword);
 
 export default router;
