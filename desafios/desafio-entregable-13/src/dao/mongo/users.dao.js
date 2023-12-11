@@ -13,7 +13,7 @@ export default class UsersDAO {
         return userModel.create(userDTO);
     }
 
-    updateUser = (id, userDTO) => {
+    update = (id, userDTO) => {
         return userModel.updateOne({ _id: id }, { $set: userDTO });
     }
 }

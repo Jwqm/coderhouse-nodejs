@@ -11,8 +11,7 @@ const schema = new mongoose.Schema(
         },
         age: Number,
         password: String,
-        role:
-        {
+        role: {
             type: String,
             enum: ['user', 'admin', 'premium'],
             default: 'user'
@@ -20,6 +19,19 @@ const schema = new mongoose.Schema(
         cart: {
             type: mongoose.SchemaTypes.ObjectId,
             ref: "carts",
+        },
+        documents: [
+            {
+                name: {
+                    type: String,
+                },
+                reference: {
+                    type: String,
+                },
+            }
+        ],
+        last_connection: {
+            type: Date,
         },
     }
 )

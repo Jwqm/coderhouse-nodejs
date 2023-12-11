@@ -16,6 +16,6 @@ export default class UsersRepository {
     }
 
     update = (id, userDTO) =>{
-        return this.dao.updateUser(id, userDTO.toDatabaseData());
+        return this.dao.update(id, userDTO.toDatabaseData());
     }
 }
