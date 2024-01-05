@@ -16,7 +16,7 @@ router.use((req, res, next) => {
 
 router.get("/products", auth(["NO_AUTH"]), products);
 
-router.get("/users", users);
+router.get("/users", auth(["ADMIN"]), users);
 
 router.get('/carts/:cid', auth(["USER"]), cartBy);
 
