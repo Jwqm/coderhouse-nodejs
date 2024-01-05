@@ -57,7 +57,7 @@ async function products(req, res, next) {
         user: req.session.user,
         products: result.payload,
         idCart: shoppingCart.products.length > 0 ? shoppingCart.idCart : undefined,
-        isAdmin: req.session.user.role === 'admin' ? true: false,
+        isAdmin: (req.session.user?.role === 'admin') || false,
         page: result.page,
         hasPrevPage: result.hasPrevPage,
         hasNextPage: result.hasNextPage,
