@@ -1,8 +1,5 @@
-
-import ProductsDTO from "../dao/dto/products.dto.js";
-import CartsDTO from "../dao/dto/carts.dto.js";
 import TicketsDTO from "../dao/dto/tickets.dto.js";
-import { cartsService, productsService, ticketsService } from "../services/repositories.service.js";
+import { cartsService, ticketsService } from "../services/repositories.service.js";
 
 export default class PurchaseService {
 

@@ -1,5 +1,6 @@
 export default class UserDTO {
-    constructor({ firstname, lastname, email, age, password, role, cart }) {
+    constructor({ id, firstname, lastname, email, age, password, role, cart, documents, last_connection }) {
+        if (id) this.id = id;
         if (firstname) this.firstname = firstname;
         if (lastname) this.lastname = lastname;
         if (email) this.email = email;
@@ -7,13 +8,11 @@ export default class UserDTO {
         if (password) this.password = password;
         if (role) this.role = role;
         if (cart) this.cart = cart;
+        if (documents) this.documents = documents;
+        if (last_connection) this.last_connection = last_connection;
     }
 
     static build(data) {
-        return new UserDTO(data);
-    }
-
-    static build(data, fields) {
         return new UserDTO(data);
     }
 
@@ -28,11 +27,14 @@ export default class UserDTO {
             password: data.password,
             role: data.role,
             cart: data.cart,
+            documents: data.documents,
+            last_connection: data.last_connection,
         });
     }
 
     toDatabaseData() {
         const databaseData = {
+            _id: this.id,
             firstName: this.firstname,
             lastName: this.lastname,
             email: this.email,
@@ -40,6 +42,8 @@ export default class UserDTO {
             password: this.password,
             role: this.role,
             cart: this.cart,
+            documents: this.documents,
+            last_connection: this.last_connection,
         };
 
         for (const prop in databaseData) {
@@ -51,12 +55,12 @@ export default class UserDTO {
         return databaseData;
     }
 
-    static getTokenDTOFrom = (user) =>{
+    static getTokenDTOFrom = (user) => {
         return {
             name: `${user.firstName} ${user.lastName}`,
-            id:user._id,
+            id: user._id,
             role: user.role,
-            library:user.library
+            library: user.library
         }
     }
 }

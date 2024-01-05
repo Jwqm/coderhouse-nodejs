@@ -1,0 +1,50 @@
+<h1>Bienvenido {{this.user.firstName}} al portal E-Commerce.
+    <a href="/"><button>Ver Perfil</button></a>
+    {{#if this.isAdmin}}<a href="/users"><button>Listado de Usuarios</button></a>{{/if}}
+    <a href="/logout"><button>Cerrar Sesion</button></a>
+</h1>
+<br>
+<h3>Usted posee el rol {{this.user.role}}</h3>
+
+<h1 class="title">Productos</h1>
+{{#if errorMessage}}
+<div class="error-message">
+    {{errorMessage}}
+</div>
+{{/if}}
+<div class="container">
+    {{#each products}}
+    <div class="card" id={{this.id}}>
+        <div class="card-body">
+            <img class="card-img" src={{this.thumbnail}} alt={{this.title}} />
+            <h5 class="card-title">{{this.title}}</h5>
+            <p class="card-text">Precio: ${{this.price}}</p>
+            <p class="card-text">Stock: {{this.stock}}</p>
+            <form action="/products/detail/{{this.id}}" method="GET">
+                <button id="detail" type="submit">Ver detalles</button>
+            </form>
+            <form action="/products/addToShoppingCart/{{this.id}}" method="POST">
+                <button id="add" type="submit">Agregar al carrito</button>
+            </form>
+        </div>
+    </div>
+    {{/each}}
+</div>
+<div class="pagination">
+    {{#if hasPrevPage}}
+    <a href="/?page={{prevPage}}"><button>Anterior</button></a>
+    {{/if}}
+
+    <h5>{{page}}</h5>
+
+    {{#if hasNextPage}}
+    <a href="/?page={{nextPage}}"><button>Siguiente</button></a>
+    {{/if}}
+</div>
+<div class="button-container">
+    {{#if idCart}}
+    <a href="carts/{{idCart}}">Ver el carrito</a>
+    {{else}}
+    <span>No hay elementos en el carrito de compras</span>
+    {{/if}}
+</div>

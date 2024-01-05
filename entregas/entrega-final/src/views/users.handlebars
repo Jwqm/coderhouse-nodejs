@@ -1,0 +1,34 @@
+<!-- users.handlebars -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuarios</title>
+</head>
+
+<body>
+    <h1 class="title">Usuarios</h1>
+    <ul>
+        <div class="container">
+            {{#each users}}
+            <div class="card" id={{this.id}}>
+                <div class="card-body">
+                    <img class="card-img" src={{this.thumbnail}} alt={{this.firstname}} />
+                    <h5 class="card-title">{{this.firstname}} {{this.lastname}}</h5>
+                    <p class="card-text">Email: ${{email}}</p>
+                    <p class="card-text">Edad: {{age}}</p>
+                    <p class="card-text">Rol: {{role}}</p>
+                </div>
+            </div>
+            {{/each}}
+    </ul>
+</body>
+<div class="container">
+    <form action="/products" method="GET">
+        <button type="submit">Volver</button>
+    </form>
+</div>
+</html>

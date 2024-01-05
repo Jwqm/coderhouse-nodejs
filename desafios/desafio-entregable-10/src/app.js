@@ -5,10 +5,8 @@ import handlebars from 'express-handlebars';
 import errorHandler from './middlewares/response.error.handler.js';
 import __dirname from "./utils.js";
 import config from "./config/config.js"
-import http from 'http';
 import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
-import passport from 'passport';
 import { addLogger } from './middlewares/logger.handler.js';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUIExpress from 'swagger-ui-express';
@@ -16,27 +14,14 @@ import swaggerUIExpress from 'swagger-ui-express';
 import productsRoutes from './routes/products.routes.js';
 import cartsRoutes from './routes/carts.routes.js';
 import sessionsRoutes from './routes/sessions.routes.js';
+import usersRoutes from './routes/users.routes.js';
 import viewsRoutes from './routes/views.routes.js';
 import logsRoutes from './routes/logs.routes.js';
 import initializeStrategies from './config/passport.config.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-
-app.use(cookieParser());
-app.use(session({
-    store: MongoStore.create({
-        mongoUrl: config.mongo.URL,
-        ttl: 600
-    }),
-    secret: 'coderhouse', // Una cadena secreta para firmar la sesión
-    resave: false, // Evita que se guarde la sesión en cada solicitud
-    saveUninitialized: true, // Guarda una sesión incluso si no está inicializada
-    cookie: { secure: false }, // Configuración de la cookie de sesión
-}));
-
-initializeStrategies();
-app.use(passport.initialize());
+const server = app.listen(PORT, () => console.log(`Listening on port ${server.address().port}...`));
 
 const connection = mongoose.connect(config.mongo.URL);
 const swaggerSpecOptions = {
@@ -61,13 +46,25 @@ app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
 app.set("views", `${__dirname}/views`);
 
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: config.mongo.URL,
+        ttl: 600
+    }),
+    secret: "coderhouse", // Una cadena secreta para firmar la sesión
+    resave: false, // Evita que se guarde la sesión en cada solicitud
+    saveUninitialized: true, // Guarda una sesión incluso si no está inicializada
+    cookie: { httpOnly: false, secure: false }, // Configuración de la cookie de sesión
+}));
+
+initializeStrategies();
+
 app.use('/api/products', productsRoutes);
 app.use('/api/carts', cartsRoutes);
 app.use('/api/sessions', sessionsRoutes);
+app.use('/api/users', usersRoutes);
 app.use('/', logsRoutes);
 app.use("/", viewsRoutes);
 app.use(errorHandler);
 
-const server = http.createServer(app);
-server.listen(PORT, () => console.log(`Listening on port ${server.address().port}...`));
 server.on("error", error => console.log(`Server error ${error}`));

@@ -1,5 +1,3 @@
-import UserDTO from "../../dao/dto/users.dto.js";
-
 export default class UsersRepository {
     constructor(dao) {
         this.dao = dao;
@@ -17,7 +15,7 @@ export default class UsersRepository {
         return this.dao.create(userDTO.toDatabaseData());
     }
 
-    update = (id, userDTO) =>{
-        return this.dao.updateUser(id, userDTO.toDatabaseData());
+    update = (id, userDTO) => {
+        return this.dao.update(id, userDTO.toDatabaseData());
     }
 }

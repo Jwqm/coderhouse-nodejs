@@ -1,9 +1,9 @@
 import express from 'express';
-import { productsService, cartsService } from "../services/repositories.service.js";
+import { usersService, productsService, cartsService } from "../services/repositories.service.js";
 import ProductsDTO from '../dao/dto/products.dto.js';
 import SessionService from '../services/session.service.js';
 import { purchaseService } from '../services/purchase.service.js';
-import UserDTO from '../dao/dto/users.dto.js';
+import UsersDTO from '../dao/dto/users.dto.js';
 import config from '../config/config.js';
 import jwt from 'jsonwebtoken';
 
@@ -132,8 +132,6 @@ async function passwordRestore(req, res) {
         jwt.verify(token, config.jwt.SECRET);
         res.render('PasswordRestore');
     } catch (error) {
-        console.log(error);
-        console.log(Object.keys(error));
         if (error.expiredAt) {
             return res.render('RestorePasswordError', { error: "El link de este correo expiró, favor de solicitar un nuevo correo" });
         }
@@ -144,8 +142,8 @@ async function passwordRestore(req, res) {
 function profile(req, res, next) {
     const userSession = req.session.user;
     if (!userSession) return res.redirect('/login');
-    const userDTO = UserDTO.build({ name: userSession.firstName, lastname: userSession.lastName, age: userSession.age, email: userSession.email });
-    res.render('profile', { user: userDTO });
+    const usersDTO = UsersDTO.build({ name: userSession.firstName, lastname: userSession.lastName, age: userSession.age, email: userSession.email });
+    res.render('profile', { user: usersDTO });
 }
 
 function renderRegisterPage(req, res) {
@@ -156,7 +154,9 @@ function renderLoginPage(req, res) {
     res.render('login');
 }
 
-function logout(req, res) {
+async function logout(req, res) {
+    const tokenizedUser = UsersDTO.getTokenDTOFrom(req.session.user);
+    await usersService.update(tokenizedUser.id.toString(), UsersDTO.build({ last_connection: new Date()}));
     req.session.destroy(error => {
         return res.redirect('/');
     });
