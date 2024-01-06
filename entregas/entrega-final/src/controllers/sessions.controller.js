@@ -24,11 +24,13 @@ const login = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-    const tokenizedUser = UsersDTO.getTokenDTOFrom(req.session.user);
-    await usersService.update(tokenizedUser.id.toString(), UsersDTO.build({ last_connection: new Date() }));
-    // Limpia la cookie
-    res.clearCookie(config.jwt.COOKIE);
+    if (req.session.user) {
+        const tokenizedUser = UsersDTO.getTokenDTOFrom(req.session.user);
+        await usersService.update(tokenizedUser.id.toString(), UsersDTO.build({ last_connection: new Date() }));
 
+        // Limpia la cookie
+        res.clearCookie(config.jwt.COOKIE);
+    }
     // Destruye la sesión
     req.session.destroy(err => {
         if (err) {

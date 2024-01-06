@@ -19,6 +19,13 @@ export const errorCodes = {
     ERROR_DELETE_USER_PRODUCT: "20045",
     //Tickets
     ERROR_CREATE_TICKET: "20200",
+    //Users
+    ERROR_GET_USER: "20050",
+    ERROR_GET_USER_NOT_FOUND: "20051",
+    ERROR_GET_USER_WITH: "20052",
+    ERROR_CREATE_USER: "20060",
+    ERROR_CREATE_USER_MAIL_DUPLICATE: "20061",
+    ERROR_UPDATE_USER: "20070",
 };
 
 export const errorMessages = {
@@ -42,4 +49,11 @@ export const errorMessages = {
     [errorCodes.ERROR_DELETE_USER_PRODUCT]: 'Error al eliminar el producto, el rol del usuario no tiene permitido eliminar productos',
     //Tickets
     [errorCodes.ERROR_CREATE_TICKET]: 'Error al crear el ticket',
+    //Users
+    [errorCodes.ERROR_GET_USER]: 'Error al obtener los usuarios',
+    [errorCodes.ERROR_GET_USER_NOT_FOUND]: 'Usuario no encontrado',
+    [errorCodes.ERROR_GET_USER_WITH]: 'Error al obtener el usuario',
+    [errorCodes.ERROR_CREATE_USER]: 'Error al crear el usuario',
+    [errorCodes.ERROR_CREATE_USER_MAIL_DUPLICATE]: 'Error ya existe un usuario con el mail ingresado',
+    [errorCodes.ERROR_UPDATE_USER]: 'Error al actualizar el usuario',
 };

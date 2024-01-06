@@ -163,12 +163,13 @@ function renderLoginPage(req, res) {
 }
 
 async function logout(req, res) {
+    if (req.session.user) {
+        const tokenizedUser = UsersDTO.getTokenDTOFrom(req.session.user);
+        await usersService.update(tokenizedUser.id.toString(), UsersDTO.build({ last_connection: new Date() }));
 
-    const tokenizedUser = UsersDTO.getTokenDTOFrom(req.session.user);
-    await usersService.update(tokenizedUser.id.toString(), UsersDTO.build({ last_connection: new Date() }));
-
-    // Limpia la cookie
-    res.clearCookie(config.jwt.COOKIE);
+        // Limpia la cookie
+        res.clearCookie(config.jwt.COOKIE);
+    }
 
     // Destruye la sesión
     req.session.destroy(err => {

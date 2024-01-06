@@ -1,5 +1,6 @@
 <h3>Registe su nueva cuenta</h3>
 <br>
+<div id="errorMessage" style="color: red;"></div>
 <div>
     <form id="registerForm">
         <label>Nombre: </label><input name="firstname">
@@ -10,9 +11,15 @@
         <br>
         <label>Edad: </label><input name="age">
         <br>
-        <label>Contraseña: </label><input name="password">
+        <label>Contraseña: </label><input type="password" name="password">
         <br>
         <input type="submit">
+    </form>
+</div>
+<br>
+<div class="container">
+    <form action="/products" method="GET">
+        <button type="submit">Volver al portal</button>
     </form>
 </div>
 

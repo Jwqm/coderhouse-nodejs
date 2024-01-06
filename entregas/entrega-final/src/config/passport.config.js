@@ -1,6 +1,6 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as JWTStrategy, ExtractJwt} from "passport-jwt";
+import { Strategy as JWTStrategy, ExtractJwt } from "passport-jwt";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import GithubStrategy from 'passport-github2';
 import config from "./config.js";
@@ -9,19 +9,27 @@ import auth from "../services/auth.js";
 import UserDTO from "../dao/dto/users.dto.js";
 
 const initializeStrategies = () => {
-    passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email', session:false }, async (req, email, password, done) => {
-        const hashedPassword = await auth.createHash(password);
-        req.body.password = hashedPassword;
-        const result = await usersService.create(UserDTO.build(req.body));
-        done(null, result)
+    passport.use('register', new LocalStrategy({ passReqToCallback: true, usernameField: 'email', session: false }, async (req, email, password, done) => {
+        try {
+            const hashedPassword = await auth.createHash(password);
+            req.body.password = hashedPassword;
+            const result = await usersService.create(UserDTO.build(req.body));
+            done(null, result);
+        } catch (error) {
+            done(error);
+        }
     }))
 
-    passport.use('login', new LocalStrategy({ usernameField: 'email', session:false }, async (email, password, done) => {
-        const user = await usersService.getBy(UserDTO.build({ email }));
-        if (!user) return done(null, false, { message: "Usuario no encontrado" });
-        const isValidPassword = await auth.validatePassword(password, user.password);
-        if (!isValidPassword) return done(null, false, { message: "Credenciales incorrectas" });
-        done(null, user);
+    passport.use('login', new LocalStrategy({ usernameField: 'email', session: false }, async (email, password, done) => {
+        try {
+            const user = await usersService.getBy(UserDTO.build({ email }));
+            if (!user) return done(null, false, { message: "Usuario no encontrado" });
+            const isValidPassword = await auth.validatePassword(password, user.password);
+            if (!isValidPassword) return done(null, false, { message: "Credenciales incorrectas" });
+            done(null, user);
+        } catch (error) {
+            done(error);
+        }
     }))
 
     passport.use('github', new GithubStrategy({

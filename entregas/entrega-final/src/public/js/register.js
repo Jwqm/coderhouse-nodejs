@@ -1,4 +1,5 @@
 const form = document.getElementById('registerForm');
+const errorMessageElement = document.getElementById('errorMessage');
 
 form.addEventListener('submit', async e => {
     e.preventDefault();
@@ -16,5 +17,14 @@ form.addEventListener('submit', async e => {
 
     if (response.status === 201) {
         window.location.replace('/login');
+    } else {
+        try {
+            const errorText = await response.text();
+            const errorObject = JSON.parse(errorText);
+            const errorMessage = errorObject.message || 'Error desconocido';
+            errorMessageElement.innerText = `Error: ${errorMessage}`;
+        } catch (error) {
+            errorMessageElement.innerText = 'Error al procesar la respuesta del servidor';
+        }
     }
 })
